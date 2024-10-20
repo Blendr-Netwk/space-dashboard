@@ -1,14 +1,15 @@
-import { MainContainer } from "@/components/container/MainContainer"
+"use client"
+
+import ProtectedRoute from "@/components/Routes/ProtectedRoute"
 import VerifySection from "@/components/sections/space/verifySection/verifySection"
-import { Suspense, useEffect } from "react"
+import { Suspense } from "react"
 
 export default function VerifyPage() {
   return (
-    <VerifySection />
-    // <MainContainer>
-    //   <Suspense>
-    //     <VerifySection />
-    //   </Suspense>
-    // </MainContainer>
+    <ProtectedRoute>
+      <Suspense>
+        <VerifySection />
+      </Suspense>
+    </ProtectedRoute>
   )
 }

@@ -39,7 +39,7 @@ const VerifySection = () => {
         />
       </div>
       {isSuccess ? (
-        <div className=" w-full clusterDeploy-card flex flex-col items-start justify-center gap-4 px-14 py-10 rounded-2xl sm:4/5 md:w-3/5 lg:w-1/3 ">
+        <div className=" w-full clusterDeploy-card flex flex-col items-start justify-center gap-4 px-14 py-10 rounded-2xl sm:4/5 md:w-3/5 lg:w-1/2 ">
           <h1 className="text-green-600 text-xl font-semibold mb-2">Woohoo!</h1>
           <h2 className="text-white text-lg font-semibold">
             Blendr CLI Login Successful
@@ -48,6 +48,33 @@ const VerifySection = () => {
             You are logged in to the Blendr Command-Line interface. You can
             immediately close this window and continue using the CLI.
           </p>
+
+          <ol className="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0 rtl:space-x-reverse">
+            <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+              <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                1
+              </span>
+              <span>
+                <p className="text-sm">Initial Setup</p>
+              </span>
+            </li>
+            <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+              <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                2
+              </span>
+              <span>
+                <p className="text-sm">Listen Task</p>
+              </span>
+            </li>
+            <li className="flex items-center text-gray-500 dark:text-gray-400 space-x-2.5 rtl:space-x-reverse">
+              <span className="flex items-center justify-center w-8 h-8 border border-gray-500 rounded-full shrink-0 dark:border-gray-400">
+                3
+              </span>
+              <span>
+                <p className="text-sm">Earn Rewards</p>
+              </span>
+            </li>
+          </ol>
         </div>
       ) : (
         <div className=" w-full clusterDeploy-card flex flex-col items-center justify-center gap-10 px-14 py-10 rounded-2xl sm:4/5 md:w-3/5 lg:w-1/3 ">

@@ -1,20 +1,24 @@
-import { useUser } from "@/providers/UserProvider";
-import { useEffect } from "react";
+import { useUser } from "@/providers/UserProvider"
+import { useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, isAuthenticated, status } = useUser();
+  const { user, isAuthenticated, status } = useUser()
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get("sessionId")
 
   useEffect(() => {
     if (status === "failed") {
-      window.location.href = "/login";
+      const path = `/login${sessionId ? `?sessionId=${sessionId}` : ""}`
+      window.location.href = path
     }
-  }, [status]);
+  }, [status, sessionId])
 
   if (!isAuthenticated) {
-    return <div>Loading..</div>;
+    return <div>Loading..</div>
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute

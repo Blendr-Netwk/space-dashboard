@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Dropdown from "@/components/dropdown/dropdown";
+import { CiGift } from "react-icons/ci"
 import { IoIosMenu } from "react-icons/io";
 import { MdOutlineClose } from "react-icons/md";
 import { logoutUser } from "@/controller";
@@ -203,7 +204,7 @@ const SpaceSidebar = () => {
           <Link href="/rewards">
             <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
               <div className=" icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
-                <Image
+                {/* <Image
                   src="/assets/img/transaction.png"
                   width={500}
                   height={500}
@@ -212,6 +213,11 @@ const SpaceSidebar = () => {
                     pathname === "/rewards"
                       ? " grayscale-0 opacity-100"
                       : "opacity-25"
+                  }`}
+                /> */}
+                <CiGift
+                  className={`w-6 h-6 ${
+                    pathname === "/rewards" ? "text-white" : "text-white opacity-25"
                   }`}
                 />
               </div>
@@ -276,7 +282,7 @@ const SpaceSidebar = () => {
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default SpaceSidebar;

@@ -62,14 +62,19 @@ const Rewards = () => {
 
   return (
     <MainContainer>
-      <div className=" w-full mt-20 pt-8 px-5 sm:p-0 sm:w-full sm:mt-8 sm:mx-4 sm:pl-[150px]">
+      <div className="w-full mt-20 pt-8 px-5 sm:p-0 sm:w-full sm:mt-8 sm:mx-4 sm:pl-[150px]">
         <div className="flex flex-row gap-16 items-center">
           <h2 className=" text-xl font-bold text-white md:text-2xl ">
             User Rewards: {totalReward}
           </h2>
           <button
             onClick={handleClaim}
-            className="py-4 text-sm flex justify-center items-center bg-[#6C95C0] w-[16rem] rounded-full hover:bg-[#4f7aa8]"
+            disabled={totalReward === 0}
+            className={`py-4 text-sm flex justify-center items-center w-[16rem] rounded-full ${
+              totalReward === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#6C95C0] hover:bg-[#4f7aa8]"
+            }`}
           >
             Claim
           </button>
@@ -78,7 +83,10 @@ const Rewards = () => {
           <Table className=" w-full rounded-[20px] px-[30px] py-5 bg-[#11141d]">
             <TableHeader>
               <TableRow className="w-full mb-4 flex">
-                <TableHead className=" text-[#A6A4AF] ">Amount</TableHead>
+                <TableHead className=" text-[#A6A4AF] ">Name</TableHead>
+                <TableHead className=" text-[#A6A4AF] ">
+                  Accumulated Amount
+                </TableHead>
                 <TableHead className=" text-[#A6A4AF] ">
                   Claimed Amount
                 </TableHead>
@@ -104,10 +112,21 @@ const Rewards = () => {
                 rewards.map((reward) => (
                   <TableRow key={reward.id} className="rounded-lg mb-2">
                     <TableCell className="font-medium text-white table-border">
-                      {reward.amount}
+                      {reward.node.name}
                     </TableCell>
                     <TableCell className="font-medium text-white table-border">
-                      {reward.claimedAmount}
+                      {reward.amount}
+                    </TableCell>
+                    <TableCell className="font-medium table-border">
+                      {reward.amount === 0 ? (
+                        <span className="text-red-500">Invalid</span>
+                      ) : reward.amount === reward.claimedAmount ? (
+                        <span className="text-lime-500">Claimed</span>
+                      ) : (
+                        <span className="text-white">
+                          {reward.claimedAmount}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="font-medium text-white table-border">
                       {new Date(reward.startDate).toLocaleString()}

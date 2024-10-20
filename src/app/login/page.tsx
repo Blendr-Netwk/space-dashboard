@@ -9,9 +9,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+import { useSearchParams } from "next/navigation"
 
 const Login = () => {
   const router = useRouter();
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get("sessionId")
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
 
   const handleMenuOpen = () => {
@@ -23,7 +26,10 @@ const Login = () => {
       const res = await loginUser(CONNECT_WALLET_TYPES.METAMASK);
       if (res) {
         localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res);
-        router.push("/");
+        if (sessionId)
+          router.push(`/verify?sessionId=${sessionId}`)
+        else
+          router.push("/");
       }
     } catch (error: any) {
       console.log("err : ", error);
@@ -37,9 +43,12 @@ const Login = () => {
         if (token) {
           setAxiosJwtToken(token);
           const user = await getAuthenticatedUser();
-          if (user) {
-            router.push("/");
-          }
+          if (!user) return
+
+          if (sessionId)
+            router.push(`/verify?sessionId=${sessionId}`)
+          else
+            router.push("/")
         }
       } catch (err) {
         localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
