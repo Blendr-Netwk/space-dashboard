@@ -70,7 +70,7 @@ const Rewards = () => {
           <button
             onClick={handleClaim}
             disabled={totalReward === 0}
-            className={`py-4 text-sm flex justify-center items-center w-[16rem] rounded-full ${
+            className={`flex justify-center items-center px-5 py-3 rounded-full text-white font-medium max-w-[20rem] text-lg uppercase w-full ${
               totalReward === 0
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#6C95C0] hover:bg-[#4f7aa8]"
