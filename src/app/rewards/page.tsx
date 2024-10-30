@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { getRewardContract } from "@/service/ether/contract"
+import { ethers } from "ethers"
 import { useEffect, useState } from "react"
 
 const Rewards = () => {
@@ -39,9 +40,11 @@ const Rewards = () => {
     try {
       const res: any = await claimReward()
       const { amount, nonce, timestamp, signature } = res.data
+      const amountInWei = ethers.parseUnits(amount.toString(), 18)
+
       const rewardContract = await getRewardContract()
       const tx = await rewardContract.claimReward(
-        amount,
+        amountInWei,
         nonce,
         timestamp,
         signature,
@@ -97,7 +100,7 @@ const Rewards = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!rewards && (
+              {rewards.length === 0 && (
                 <TableRow className="text-center w-full flex items-center justify-center">
                   <TableCell
                     colSpan={12}

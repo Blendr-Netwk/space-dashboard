@@ -53,7 +53,7 @@ const Transaction = () => {
               {transactions.length === 0 && (
                 <TableRow className="text-center w-full flex items-center justify-center">
                   <TableCell colSpan={12} className="text-center text-white flex justify-center h-20">
-                    No transactions
+                    No Transactions
                   </TableCell>
                 </TableRow>
               )}
