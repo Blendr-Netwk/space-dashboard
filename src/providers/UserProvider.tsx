@@ -1,6 +1,6 @@
 "use client";
 import { getAuthenticatedUser } from "@/clientApi/auth";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { setAxiosJwtToken } from "@/service/axios";
 import { LOCAL_STORAGE_AUTH_KEY } from "@/constants/app";
@@ -50,23 +50,32 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     return user;
   };
 
+  useLayoutEffect(() => {
+    const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY)
+    if (!token) {
+      throw new Error("No Token found in local storage")
+    }
+  
+    setAxiosJwtToken(token)
+  }, [])
+
   useEffect(() => {
-    (async () => {
-      try {
-        const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY);
-        //TODO: get what type from here.
-        if (!token) throw new Error("No Token");
-        ///api/authenticate if user
-        // console.log("token", token);
-        setAxiosJwtToken(token);
-        await connectWallet("metamask");
-        await handleAuthentication();
-      } catch (err) {
-        setStatus("failed");
-        localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY);
-        console.log(err);
+      const authenticateUser = async () => {
+        try {
+          await connectWallet("metamask")
+          await handleAuthentication()
+        } catch (err) {
+          handleAuthenticationError(err)
+        }
       }
-    })();
+
+      const handleAuthenticationError = (error: any) => {
+        setStatus("failed")
+        localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY)
+        console.error("Authentication error:", error)
+      }
+
+      authenticateUser()
   }, []);
 
   // useEffect(() => {
