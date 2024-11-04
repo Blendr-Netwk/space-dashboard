@@ -50,16 +50,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     return user;
   };
 
-  useLayoutEffect(() => {
-    const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY)
-    if (!token) {
-      throw new Error("No Token found in local storage")
+  const checkUserTokenInLocalStorage = () => {
+    try{
+      const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY)
+      if (!token) {
+        throw new Error("No Token found in local storage")
+      }
+    
+      setAxiosJwtToken(token)
     }
-  
-    setAxiosJwtToken(token)
-  }, [])
+    catch(err){
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
+    checkUserTokenInLocalStorage()
       const authenticateUser = async () => {
         try {
           await connectWallet("metamask")
