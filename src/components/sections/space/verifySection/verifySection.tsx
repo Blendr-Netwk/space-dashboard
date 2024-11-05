@@ -21,8 +21,9 @@ const VerifySection = () => {
         // router.push("/");
         setSuccess(true)
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
+      alert(err.message)
       setLoading(false)
     }
   }

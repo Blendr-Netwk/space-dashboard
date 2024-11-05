@@ -7,15 +7,18 @@ import { connectWallet } from "@/service/ether";
 import { CONNECT_WALLET_TYPES } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useSearchParams } from "next/navigation"
+import { useUser } from "@/providers/UserProvider";
 
 const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("sessionId")
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+  const { handleAuthentication } = useUser()
+  const hasRun = useRef(false)
 
   const handleMenuOpen = () => {
     setMenuOpen((pre) => !pre);
@@ -26,6 +29,7 @@ const Login = () => {
       const res = await loginUser(CONNECT_WALLET_TYPES.METAMASK);
       if (res) {
         localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res);
+        await handleAuthentication()
         if (sessionId)
           router.push(`/verify?sessionId=${sessionId}`)
         else
@@ -38,6 +42,9 @@ const Login = () => {
 
   useEffect(() => {
     (async () => {
+      if (hasRun.current) return
+      hasRun.current = true
+      
       try {
         const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY);
         if (token) {

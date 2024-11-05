@@ -1,102 +1,93 @@
-"use client";
-import { getAuthenticatedUser } from "@/clientApi/auth";
-import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { setAxiosJwtToken } from "@/service/axios";
-import { LOCAL_STORAGE_AUTH_KEY } from "@/constants/app";
-import { IUser } from "@/types/user";
-import { connectWallet } from "@/service/ether";
+"use client"
+
+import { getAuthenticatedUser } from "@/clientApi/auth"
+import { LOCAL_STORAGE_AUTH_KEY } from "@/constants/app"
+import { loginUser } from "@/controller"
+import { connectWallet } from "@/service/ether"
+import { CONNECT_WALLET_TYPES } from "@/types"
+import { IUser } from "@/types/user"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 
 interface UserContextType {
-  user: IUser | null;
-  isAuthenticated: boolean;
-  handleAuthentication: any;
-  status: string; // "idle"| "loading" | "authenticated" | "failed";
+  user: IUser | null
+  isAuthenticated: boolean
+  handleAuthentication: any
+  status: string // "idle"| "loading" | "authenticated" | "failed";
 }
-// interface UserProviderProps {
-//   children: React.ReactNode;
-// }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   isAuthenticated: false,
   handleAuthentication: null,
   status: "idle",
-});
+})
 
 export const useUser = () => {
-  const context = useContext(UserContext);
+  const context = useContext(UserContext)
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error("useUser must be used within a UserProvider")
   }
-  return context;
-};
+  return context
+}
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // const router = useRouter();
-  const [user, setUser] = useState(null);
-  // const [authenticate, { data, error }] = useAuthenticateUserMutation();
-  const [status, setStatus] = useState("idle");
-
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get("sessionId")
+  const pathname = usePathname()
+  const [user, setUser] = useState(null)
+  const hasRun = useRef(false)
+  const [status, setStatus] = useState("idle")
   const handleAuthentication = async () => {
-    const user = await getAuthenticatedUser();
+    const user = await getAuthenticatedUser()
     if (user) {
-      setUser(user);
-      setStatus("authenticated");
+      setUser(user)
+      setStatus("authenticated")
     }
 
-    return user;
-  };
-
-  const checkUserTokenInLocalStorage = () => {
-    try{
-      const token = localStorage.getItem(LOCAL_STORAGE_AUTH_KEY)
-      if (!token) {
-        throw new Error("No Token found in local storage")
-      }
-    
-      setAxiosJwtToken(token)
-    }
-    catch(err){
-      console.error(err)
-    }
+    return user
   }
 
   useEffect(() => {
-    checkUserTokenInLocalStorage()
-      const authenticateUser = async () => {
-        try {
+    if (hasRun.current) return
+    hasRun.current = true
+
+    const authenticateUser = async () => {
+      try {
+        if (pathname === "/login") {
+          const res = await loginUser(CONNECT_WALLET_TYPES.METAMASK)
+          if (res) {
+            localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res)
+            await handleAuthentication()
+            if (sessionId) router.push(`/verify?sessionId=${sessionId}`)
+            else router.push("/")
+          }
+        } else {
           await connectWallet("metamask")
           await handleAuthentication()
-        } catch (err) {
-          handleAuthenticationError(err)
         }
+      } catch (err) {
+        handleAuthenticationError(err)
       }
+    }
 
-      const handleAuthenticationError = (error: any) => {
-        setStatus("failed")
-        localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY)
-        console.error("Authentication error:", error)
-      }
+    const handleAuthenticationError = (error: any) => {
+      setStatus("failed")
+      localStorage.removeItem(LOCAL_STORAGE_AUTH_KEY)
+      console.error("Authentication error:", error)
+    }
 
-      authenticateUser()
-  }, []);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setUser(data.user);
-  //     setStatus("authenticated");
-  //   }
-  // }, [data]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     localStorage.removeItem(AUTH_TOKEN);
-  //     setStatus("failed");
-  //   }
-  // }, [error]);
+    authenticateUser()
+  }, [])
 
   return (
     <UserContext.Provider
@@ -104,5 +95,5 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     >
       {children}
     </UserContext.Provider>
-  );
-};
+  )
+}
