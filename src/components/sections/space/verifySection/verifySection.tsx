@@ -1,8 +1,9 @@
 "use client"
-import React, { useState } from "react"
+
+import { verifyUserCliSession } from "@/clientApi/auth"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
-import { verifyUserCliSession } from "@/clientApi/auth"
+import { useState } from "react"
 
 const VerifySection = () => {
   const router = useRouter()
@@ -18,7 +19,6 @@ const VerifySection = () => {
       setLoading(true)
       if (sessionId) {
         await verifyUserCliSession(sessionId)
-        // router.push("/");
         setSuccess(true)
       }
     } catch (err: any) {

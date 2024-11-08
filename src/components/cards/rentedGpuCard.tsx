@@ -1,7 +1,6 @@
-import React from "react";
-import Image from "next/image";
-// import { NodeData } from "@/types/node";
-import { convertMbToGb } from "@/utils/math";
+import { convertMbToGb } from "@/utils/math"
+import Image from "next/image"
+import React from "react"
 
 const RentedGpuCard: React.FC<{ node: any }> = ({ node }) => {
   return (
@@ -104,7 +103,7 @@ const RentedGpuCard: React.FC<{ node: any }> = ({ node }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RentedGpuCard;
+export default RentedGpuCard

@@ -1,5 +1,6 @@
-"use client";
-import React, { useEffect, useState } from "react";
+"use client"
+
+import { fetchRentalNodes } from "@/clientApi/node"
 import {
   Table,
   TableBody,
@@ -7,22 +8,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { fetchRentalNodes } from "@/clientApi/node";
+} from "@/components/ui/table"
+import { useEffect, useState } from "react"
 
 const MyRentalNodesTable = () => {
-  const [myNodes, setMyNodes] = useState<any[]>([]);
+  const [myNodes, setMyNodes] = useState<any[]>([])
 
   useEffect(() => {
-    (async () => {
+    const getRentalNodes = async () => {
       try {
-        const resNodes = await fetchRentalNodes();
-        setMyNodes(resNodes);
+        const resNodes = await fetchRentalNodes()
+        setMyNodes(resNodes)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    })();
-  }, []);
+    }
+
+    getRentalNodes()
+  }, [])
 
   return (
     <div className=" md:col-span-12 lg:col-span-12 ">
@@ -30,18 +33,18 @@ const MyRentalNodesTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px] text-[#A6A4AF]">Name</TableHead>
-            <TableHead className=" text-[#A6A4AF] ">GPU</TableHead>
-            <TableHead className=" text-[#A6A4AF] ">Price</TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">
+            <TableHead className=" text-[#A6A4AF]">GPU</TableHead>
+            <TableHead className=" text-[#A6A4AF]">Price</TableHead>
+            <TableHead className="text-right text-[#A6A4AF]">
               Started At
             </TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">
+            <TableHead className="text-right text-[#A6A4AF]">
               Expire At
             </TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">
+            <TableHead className="text-right text-[#A6A4AF]">
               Public Ip
             </TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">Port</TableHead>
+            <TableHead className="text-right text-[#A6A4AF]">Port</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -70,7 +73,7 @@ const MyRentalNodesTable = () => {
         </TableBody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default MyRentalNodesTable;
+export default MyRentalNodesTable

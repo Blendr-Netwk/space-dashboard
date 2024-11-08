@@ -1,33 +1,30 @@
-
-
-
 export const initialTaskData = {
-    taskType: "FINE_TUNE",
-    description: "",
-    modelDetails: {
-        modelId: "",
-        modelType: "",
-        framework: "",
-        modelName: "",
-        pretrainedModelUrl: "",
-        configUrl: "",
-        other: {
-            vocabUrl: "",
-            tokenizerConfigUrl: "",
-            specialTokensMapUrl: ""
-        }
+  taskType: "FINE_TUNE",
+  description: "",
+  modelDetails: {
+    modelId: "",
+    modelType: "",
+    framework: "",
+    modelName: "",
+    pretrainedModelUrl: "",
+    configUrl: "",
+    other: {
+      vocabUrl: "",
+      tokenizerConfigUrl: "",
+      specialTokensMapUrl: "",
     },
-    trainingData: {
-        trainingDataUrl: "",
-        validationDataUrl: ""
-    },
-    trainingParameters: {
-        learningRate: 0.0001,
-        batchSize: 16,
-        numEpochs: 3,
-        optimizer: "AdamW",
-        lossFunction: "CrossEntropyLoss"
-    },
+  },
+  trainingData: {
+    trainingDataUrl: "",
+    validationDataUrl: "",
+  },
+  trainingParameters: {
+    learningRate: 0.0001,
+    batchSize: 16,
+    numEpochs: 3,
+    optimizer: "AdamW",
+    lossFunction: "CrossEntropyLoss",
+  },
 }
 
 // export const initialTaskData = {

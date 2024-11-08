@@ -1,20 +1,21 @@
-"use client";
+"use client"
+
 // import { createInstance, fetchInstanceStatus } from "@/clientApi/aws";
 // import { fetchPricePair } from "@/clientApi/data";
-import { lendGpuApi } from "@/clientApi/node";
-import { useUser } from "@/providers/UserProvider";
+import { lendGpuApi } from "@/clientApi/node"
+import { useUser } from "@/providers/UserProvider"
 // import { downloadFile } from "@/utils/file";
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import React, { useState } from "react"
+import toast from "react-hot-toast"
 
 interface Props {
-  node: any;
+  node: any
 }
 
 const RentGpuConfirmModal: React.FC<Props> = ({ node }) => {
-  const { user } = useUser();
-  const [duration, setDuration] = useState<number>(0);
-  const [status, setStatus] = useState<string>("idle");
+  const { user } = useUser()
+  const [duration, setDuration] = useState<number>(0)
+  const [status, setStatus] = useState<string>("idle")
   // const [publicIp, setPublicIp] = useState<any>(null);
   // const [keyName, setKeyName] = useState<string>("");
   // const [priceRate, setPriceRate] = useState<number>(0);
@@ -30,19 +31,19 @@ const RentGpuConfirmModal: React.FC<Props> = ({ node }) => {
   const handleConfirm = async () => {
     try {
       if (duration < 6) {
-        toast.error("Minimum duration is 6 hours", { position: "top-right" });
-        return;
+        toast.error("Minimum duration is 6 hours", { position: "top-right" })
+        return
       }
-      console.log("renting node");
-      setStatus("preparing");
+      console.log("renting node")
+      setStatus("preparing")
 
       const lended = await lendGpuApi({
         nodeId: node.id,
         duration,
-      });
-      console.log(lended);
+      })
+      console.log(lended)
 
-      setStatus("completed");
+      setStatus("completed")
 
       //iniate payment
       // const amount = (instance.price * duration)
@@ -77,11 +78,11 @@ const RentGpuConfirmModal: React.FC<Props> = ({ node }) => {
     } catch (err: any) {
       toast.error(err.response.data.message, {
         position: "top-right",
-      });
+      })
       // setErrorMsg("Error Occured! Please try again later");
-      setStatus("idle");
+      setStatus("idle")
     }
-  };
+  }
 
   return (
     <div className=" bg-[#11141D] w-11/12 my-10 px-5 pt-[30px] pb-5 rounded-[20px] flex flex-col items-start justify-start gap-10 sm:w-9/12 md:3/5 lg:w-2/5 z-[9]">
@@ -198,7 +199,7 @@ const RentGpuConfirmModal: React.FC<Props> = ({ node }) => {
           : "Instance Created!"}
       </button> */}
     </div>
-  );
-};
+  )
+}
 
-export default RentGpuConfirmModal;
+export default RentGpuConfirmModal

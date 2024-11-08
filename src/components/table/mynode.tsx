@@ -1,5 +1,5 @@
-"use client";
-import React, { useEffect, useState } from "react";
+"use client"
+
 import {
   Table,
   TableBody,
@@ -7,8 +7,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { fetchMyNodes } from "@/clientApi/node";
+} from "@/components/ui/table"
+import React from "react"
 
 const MyNodeTable: React.FC<{ myNodes: any[] }> = ({ myNodes }) => {
   return (
@@ -17,16 +17,16 @@ const MyNodeTable: React.FC<{ myNodes: any[] }> = ({ myNodes }) => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px] text-[#A6A4AF]">Name</TableHead>
-            <TableHead className=" text-[#A6A4AF] ">GPU</TableHead>
-            <TableHead className=" text-[#A6A4AF] ">CPU</TableHead>
-            <TableHead className=" text-[#A6A4AF] ">Price</TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">
+            <TableHead className=" text-[#A6A4AF]">GPU</TableHead>
+            <TableHead className=" text-[#A6A4AF]">CPU</TableHead>
+            <TableHead className=" text-[#A6A4AF]">Price</TableHead>
+            <TableHead className="text-right text-[#A6A4AF]">
               Created At
             </TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">
+            <TableHead className="text-right text-[#A6A4AF]">
               Approved
             </TableHead>
-            <TableHead className="text-right text-[#A6A4AF] ">Status</TableHead>
+            <TableHead className="text-right text-[#A6A4AF]">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -78,7 +78,7 @@ const MyNodeTable: React.FC<{ myNodes: any[] }> = ({ myNodes }) => {
         </TableBody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default MyNodeTable;
+export default MyNodeTable

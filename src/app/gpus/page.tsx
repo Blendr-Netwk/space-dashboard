@@ -1,28 +1,29 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RentedGpuCard from "@/components/cards/rentedGpuCard";
-import Image from "next/image";
-import { MainContainer } from "@/components/container/MainContainer";
-import { fetchInstanceTypes } from "@/clientApi/aws";
-import Link from "next/link";
-import { geAllNodes } from "@/clientApi/node";
+"use client"
+
+import { getAllNodes } from "@/clientApi/node"
+import RentedGpuCard from "@/components/cards/rentedGpuCard"
+import { MainContainer } from "@/components/container/MainContainer"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 
 const RentedGpus = () => {
-  const [gpus, setGpus] = useState<any[]>([]);
-  const [activeGpus, setActiveGpus] = useState<any[]>([]);
+  const [gpus, setGpus] = useState<any[]>([])
+  const [activeGpus] = useState<any[]>([])
 
   useEffect(() => {
-    (async () => {
+    const getNodes = async () => {
       try {
-        const resGpus = await geAllNodes();
-        setGpus(resGpus);
-        // setActiveGpus(resGpus.filter((node) => node.status === "busy"));
+        const resGpus = await getAllNodes()
+        setGpus(resGpus)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    })();
-  }, []);
+    }
+
+    getNodes()
+  }, [])
 
   return (
     <MainContainer>
@@ -40,12 +41,6 @@ const RentedGpus = () => {
                 >
                   Available
                 </TabsTrigger>
-                {/* <TabsTrigger
-                  value="inactive"
-                  className=" text-white text-[15px] "
-                >
-                  Active
-                </TabsTrigger> */}
               </TabsList>
             </div>
             <Link
@@ -64,22 +59,6 @@ const RentedGpus = () => {
                 Add GPU
               </h3>
             </Link>
-            {/* <a
-              href="https://pypi.org/project/blendr-cli/"
-              className=" h-10 rounded-[88.21px] px-5 py-[15px] bg-[#6C95C0] flex flex-row items-center justify-center gap-[10px] "
-              target="_blank"
-            >
-              <Image
-                src="/assets/img/sidebar/microchip.png"
-                width={500}
-                height={500}
-                alt="Picture of the author"
-                className=" w-5 h-5"
-              />
-              <h3 className=" text-[15px] font-semibold text-white ">
-                Add GPU
-              </h3>
-            </a> */}
           </div>
           <TabsContent value="active" className=" text-white">
             <div className=" mt-10 flex flex-col items-center justify-center gap-[10px] md:grid md:grid-cols-2 md:items-stretch md:justify-center md:gap-[10px] 2xl:grid-cols-3  xl:items-stretch xl:justify-start xl:gap-[10px]">
@@ -92,7 +71,7 @@ const RentedGpus = () => {
           <TabsContent value="inactive" className=" text-white">
             <div className=" mt-10 flex flex-col items-center justify-center gap-[10px] md:grid md:grid-cols-2 md:items-stretch md:justify-center md:gap-[10px] xl:grid-cols-3 xl:items-stretch xl:justify-start xl:gap-[10px]">
               {activeGpus.length > 0 &&
-                activeGpus.map((data, i) => (
+                activeGpus.map((data) => (
                   <RentedGpuCard key={`active-${data.id}`} node={data} />
                 ))}
             </div>
@@ -100,7 +79,7 @@ const RentedGpus = () => {
         </Tabs>
       </div>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default RentedGpus;
+export default RentedGpus

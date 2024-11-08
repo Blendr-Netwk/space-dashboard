@@ -1,7 +1,6 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { MainContainer } from "@/components/container/MainContainer";
+import { MainContainer } from "@/components/container/MainContainer"
+import Image from "next/image"
+import Link from "next/link"
 
 const GpusEmpty = () => {
   return (
@@ -28,7 +27,7 @@ const GpusEmpty = () => {
         </Link>
       </div>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default GpusEmpty;
+export default GpusEmpty

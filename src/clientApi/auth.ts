@@ -1,5 +1,5 @@
-import { axiosInstance } from "@/service/axios";
-import { AxiosError } from "axios";
+import { axiosInstance } from "@/service/axios"
+import { AxiosError } from "axios"
 
 export const authenticateUser = (
   signature: string,
@@ -12,20 +12,20 @@ export const authenticateUser = (
       data: { signature, publicAddress },
     })
       .then((response) => {
-        resolve(response.data);
+        resolve(response.data)
       })
       .catch((err: AxiosError) => {
-        console.log("err : ", err);
+        console.log("err : ", err)
         if (err.response) {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         } else if (err.request) {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         } else {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         }
-      });
-  });
-};
+      })
+  })
+}
 
 export const checkUser = (publicAddress: string): Promise<any> => {
   return new Promise((resolve, reject) => {
@@ -35,30 +35,31 @@ export const checkUser = (publicAddress: string): Promise<any> => {
       data: { publicAddress },
     })
       .then((response: any) => {
-        resolve(response.data);
+        resolve(response.data)
       })
       .catch((err: AxiosError) => {
-        console.log("error : ", err);
+        console.log("error : ", err)
         if (err.response) {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         } else if (err.request) {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         } else {
-          reject({ message: "Internal Error" });
+          reject({ message: "Internal Error" })
         }
-      });
-  });
-};
+      })
+  })
+}
 
 export const getAuthenticatedUser = (): Promise<any> => {
   return new Promise((resolve, reject) => {
     axiosInstance({
-      url: '/api/get/authenticated-user',
+      url: "/api/get/authenticated-user",
       method: "POST",
     })
-      .then(response => {
-        resolve(response.data.user);
-      }).catch((err: AxiosError) => {
+      .then((response) => {
+        resolve(response.data.user)
+      })
+      .catch((err: AxiosError) => {
         if (err.response) {
           reject({ message: "Error getting user" })
         } else if (err.request) {
@@ -69,16 +70,18 @@ export const getAuthenticatedUser = (): Promise<any> => {
       })
   })
 }
+
 export const verifyUserCliSession = (sessionId: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     axiosInstance({
-      url: '/api/verify/session-id',
+      url: "/api/verify/session-id",
       method: "POST",
-      data: { sessionId }
+      data: { sessionId },
     })
-      .then(response => {
-        resolve(response.data.user);
-      }).catch((err: AxiosError) => {
+      .then((response) => {
+        resolve(response.data.user)
+      })
+      .catch((err: AxiosError) => {
         if (err.response) {
           reject({ message: "Error getting user" })
         } else if (err.request) {
@@ -92,25 +95,24 @@ export const verifyUserCliSession = (sessionId: string): Promise<any> => {
 
 export const updateUsername = async (username: string) => {
   return await axiosInstance({
-    url: '/api/update/username',
+    url: "/api/update/username",
     method: "POST",
-    data: { username }
+    data: { username },
   })
 }
 
 export const updateSSHPublicKey = async (sshPublicKey: string) => {
   return await axiosInstance({
-    url: '/api/update/ssh-public-key',
+    url: "/api/update/ssh-public-key",
     method: "POST",
-    data: { sshPublicKey }
+    data: { sshPublicKey },
   })
 }
 
 export const depositCredits = async (txHash: string) => {
   return await axiosInstance({
-    url: '/api/deposit',
+    url: "/api/deposit",
     method: "POST",
-    data: { txHash }
+    data: { txHash },
   })
-
 }

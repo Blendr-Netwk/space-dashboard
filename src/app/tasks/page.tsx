@@ -1,14 +1,14 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { MainContainer } from "@/components/container/MainContainer";
-import { LogsComponent } from "@/components/sections/taskSection";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { initialTaskData } from "@/mockData";
-import { postNewTask } from "@/clientApi/node";
-import { uploadFileToS3 } from "@/controller";
-import { fetchAllAiModels } from "@/clientApi/ai";
-import { ITaskPayload } from "@/types/node";
+"use client"
+import React, { useEffect, useState } from "react"
+import Image from "next/image"
+import { MainContainer } from "@/components/container/MainContainer"
+import { LogsComponent } from "@/components/sections/taskSection"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { initialTaskData } from "@/mockData"
+import { postNewTask } from "@/clientApi/node"
+import { uploadFileToS3 } from "@/controller"
+import { fetchAllAiModels } from "@/clientApi/ai"
+import { ITaskPayload } from "@/types/node"
 
 const Tasks = () => {
   const {
@@ -17,47 +17,47 @@ const Tasks = () => {
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<ITaskPayload>({ defaultValues: initialTaskData });
+  } = useForm<ITaskPayload>({ defaultValues: initialTaskData })
 
-  const [taskId, setTaskId] = useState<string>("");
-  const [models, setModels] = useState<any[]>([]);
+  const [taskId, setTaskId] = useState<string>("")
+  const [models, setModels] = useState<any[]>([])
 
-  const watchAllFields = watch();
+  const watchAllFields = watch()
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        const models = await fetchAllAiModels();
-        setModels(models);
+        const models = await fetchAllAiModels()
+        setModels(models)
         if (models.length > 0) {
-          setValue("modelDetails.modelId", models[0].id);
-          setValue("modelDetails.modelType", models[0].type);
-          setValue("modelDetails.framework", models[0].framework);
-          setValue("modelDetails.configUrl", models[0].configUrl);
+          setValue("modelDetails.modelId", models[0].id)
+          setValue("modelDetails.modelType", models[0].type)
+          setValue("modelDetails.framework", models[0].framework)
+          setValue("modelDetails.configUrl", models[0].configUrl)
           setValue(
             "modelDetails.pretrainedModelUrl",
             models[0].pretrainedModelUrl
-          );
-          setValue("modelDetails.other.vocabUrl", models[0].otherUrl.vocab);
+          )
+          setValue("modelDetails.other.vocabUrl", models[0].otherUrl.vocab)
           setValue(
             "modelDetails.other.tokenizerConfigUrl",
             models[0].otherUrl.tokenizerConfig
-          );
+          )
           setValue(
             "modelDetails.other.specialTokensMapUrl",
             models[0].otherUrl.specialTokensMap
-          );
+          )
         }
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   const onSubmit: SubmitHandler<ITaskPayload> = async (data) => {
     try {
-      console.log(data);
-      const modelName = data.modelDetails.modelName;
+      console.log(data)
+      const modelName = data.modelDetails.modelName
 
       // const pretrainedModelFile = data.modelDetails.pretrainedModelFile[0];
       // const configFile = data.modelDetails.configFile[0];
@@ -66,8 +66,8 @@ const Tasks = () => {
       //   data.modelDetails.other.tokenizerConfigFile[0];
       // const specialTokensMapFile =
       //   data.modelDetails.other.specialTokensMapFile[0];
-      const trainingDataFile = data.trainingData.trainingDataFile[0];
-      const validationDataFile = data.trainingData.validationDataFile[0];
+      const trainingDataFile = data.trainingData.trainingDataFile[0]
+      const validationDataFile = data.trainingData.validationDataFile[0]
 
       // const pretrainedModelUrl = await uploadFileToS3(
       //   pretrainedModelFile,
@@ -92,35 +92,35 @@ const Tasks = () => {
       const trainingDataUrl = await uploadFileToS3(
         trainingDataFile,
         `aimodels/${modelName}/training/${trainingDataFile.name}`
-      );
+      )
       const validationDataUrl = await uploadFileToS3(
         validationDataFile,
         `aimodels/${modelName}/training/${validationDataFile.name}`
-      );
+      )
 
       // console.log(pretrainedModelUrl);
       // console.log(configUrl);
       // console.log(vocabUrl);
       // console.log(tokenizerConfigUrl);
       // console.log(specialTokensMapUrl);
-      console.log(trainingDataUrl);
-      console.log(validationDataUrl);
+      console.log(trainingDataUrl)
+      console.log(validationDataUrl)
 
       // setValue("modelDetails.pretrainedModelUrl", pretrainedModelUrl);
       // setValue("modelDetails.configUrl", configUrl);
       // setValue("modelDetails.other.vocabUrl", vocabUrl);
       // setValue("modelDetails.other.tokenizerConfigUrl", tokenizerConfigUrl);
       // setValue("modelDetails.other.specialTokensMapUrl", specialTokensMapUrl);
-      setValue("trainingData.trainingDataUrl", trainingDataUrl);
-      setValue("trainingData.validationDataUrl", validationDataUrl);
+      setValue("trainingData.trainingDataUrl", trainingDataUrl)
+      setValue("trainingData.validationDataUrl", validationDataUrl)
 
       // data.modelDetails.pretrainedModelUrl = pretrainedModelUrl;
       // data.modelDetails.configUrl = configUrl;
       // data.modelDetails.other.vocabUrl = vocabUrl;
       // data.modelDetails.other.tokenizerConfigUrl = tokenizerConfigUrl;
       // data.modelDetails.other.specialTokensMapUrl = specialTokensMapUrl;
-      data.trainingData.trainingDataUrl = trainingDataUrl;
-      data.trainingData.validationDataUrl = validationDataUrl;
+      data.trainingData.trainingDataUrl = trainingDataUrl
+      data.trainingData.validationDataUrl = validationDataUrl
 
       // console.log("fileType", `${pretrainedModelFile.type}`);
       // const predefinedUrl = await generatePredefinedUrl({
@@ -129,22 +129,22 @@ const Tasks = () => {
       // });
       // console.log(predefinedUrl);
       // const reponse = await uploadToAws(predefinedUrl, pretrainedModelFile);
-      console.log(data);
-      const response = await postNewTask(data);
-      console.log(response);
-      setTaskId(response.data.task.id);
+      console.log(data)
+      const response = await postNewTask(data)
+      console.log(response)
+      setTaskId(response.data.task.id)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const insertFileName = (file: any) => {
     if (file && file.length > 0) {
-      return file[0].name;
+      return file[0].name
     } else {
-      return "Choose Files";
+      return "Choose Files"
     }
-  };
+  }
 
   // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   console.log(e.target.files);
@@ -589,7 +589,7 @@ const Tasks = () => {
         <LogsComponent taskId={taskId} />
       </div>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default Tasks;
+export default Tasks

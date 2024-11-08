@@ -1,6 +1,6 @@
 import { useUser } from "@/providers/UserProvider"
-import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+import { useEffect } from "react"
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isAuthenticated, status } = useUser()

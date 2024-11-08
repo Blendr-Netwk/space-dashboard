@@ -1,14 +1,13 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { convertMbToGb } from "@/utils/math";
+import { convertMbToGb } from "@/utils/math"
+import Image from "next/image"
+import React from "react"
 
 type Props = {
-  node: any;
-  handleSubmit: (instanceId: any) => void;
-};
+  node: any
+  handleSubmit: (instanceId: any) => void
+}
 
-const GpuRentCard: React.FC<Props> = ({node,handleSubmit}) => {
+const GpuRentCard: React.FC<Props> = ({ node, handleSubmit }) => {
   return (
     <div className=" w-full gpu-rent-card px-5 pt-[30px] pb-5 rounded-[20px] flex flex-col items-start justify-start gap-5 ">
       <div className=" flex flex-col items-start justify-start gap-[5px] ">
@@ -63,7 +62,7 @@ const GpuRentCard: React.FC<Props> = ({node,handleSubmit}) => {
               Upload
             </h3>
             <h3 className=" text-[15px] font-medium text-white text-nowrap">
-              {((node.network.upload_speed_mbps).toFixed(0))} MB
+              {node.network.upload_speed_mbps.toFixed(0)} MB
             </h3>
           </div>
           <div className=" w-full bg-alpha-1 py-[10px] pl-[5px] pr-[15px] rounded-[52px] flex flex-row items-center justify-center gap-[10px] lg:justify-between lg:px-8 ">
@@ -78,7 +77,7 @@ const GpuRentCard: React.FC<Props> = ({node,handleSubmit}) => {
               Download
             </h3>
             <h3 className=" text-[15px] font-medium text-white text-nowrap">
-              {((node.network.download_speed_mbps).toFixed(0))} MB
+              {node.network.download_speed_mbps.toFixed(0)} MB
             </h3>
           </div>
         </div>
@@ -100,7 +99,7 @@ const GpuRentCard: React.FC<Props> = ({node,handleSubmit}) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GpuRentCard;
+export default GpuRentCard

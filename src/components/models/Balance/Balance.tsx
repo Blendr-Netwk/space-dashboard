@@ -1,12 +1,12 @@
-import { depositCredits } from "@/clientApi/auth";
-import { fetchPricePair } from "@/clientApi/data";
-import { iniatePayment } from "@/controller/payment";
-import React, { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { depositCredits } from "@/clientApi/auth"
+import { fetchPricePair } from "@/clientApi/data"
+import { iniatePayment } from "@/controller/payment"
+import React, { useEffect, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
 
 interface Props {
-  closeModal: () => void;
-  status: string;
+  closeModal: () => void
+  status: string
 }
 
 const Balance: React.FC<Props> = ({ closeModal, status }) => {
@@ -17,40 +17,41 @@ const Balance: React.FC<Props> = ({ closeModal, status }) => {
     formState: { errors, isSubmitting },
   } = useForm<{ credits: number }>({
     defaultValues: { credits: 0 },
-  });
+  })
 
-  const [priceRate, setPriceRate] = useState<number>(0);
+  const [priceRate, setPriceRate] = useState<number>(0)
 
-  const creditsV = watch("credits");
-  // const [errorMsg, setErrorMsg] = useState<string>("");
+  const creditsV = watch("credits")
 
   useEffect(() => {
-    (async () => {
-      const data = await fetchPricePair();
-      setPriceRate(data.price);
-    })();
-  }, []);
+    const getPricePair = async () => {
+      const data = await fetchPricePair()
+      setPriceRate(data.price)
+    }
+
+    getPricePair()
+  }, [])
 
   const onSubmitPayment: SubmitHandler<{ credits: number }> = async (data) => {
     try {
       if (status === "deposit") {
-        console.log("depositing..");
-        const amount = data.credits / priceRate;
-        const tx = await iniatePayment(amount.toString());
-        console.log(tx);
-        const res = await depositCredits(tx);
-        console.log(res);
-        closeModal();
+        console.log("depositing..")
+        const amount = data.credits / priceRate
+        const tx = await iniatePayment(amount.toString())
+        console.log(tx)
+        const res = await depositCredits(tx)
+        console.log(res)
+        closeModal()
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
     <>
       <div
-        onClick={()=> isSubmitting ? null : closeModal()}
+        onClick={() => (isSubmitting ? null : closeModal())}
         className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center
      justify-center z-[1]"
       ></div>
@@ -91,7 +92,7 @@ const Balance: React.FC<Props> = ({ closeModal, status }) => {
         </form>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Balance;
+export default Balance

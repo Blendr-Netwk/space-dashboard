@@ -1,15 +1,13 @@
-import Link from "next/link";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form"
 
 type SetupNodeInputs = {
-  name: string;
-  price: string;
-  hostname: string;
-  username: string;
-  port: string;
-  key: string;
-};
+  name: string
+  price: string
+  hostname: string
+  username: string
+  port: string
+  key: string
+}
 
 export const SetUpNode = () => {
   const {
@@ -17,15 +15,15 @@ export const SetUpNode = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<SetupNodeInputs>();
+  } = useForm<SetupNodeInputs>()
 
   const onSubmit: SubmitHandler<SetupNodeInputs> = (data) => {
-    console.log(data);
-  };
+    console.log(data)
+  }
 
   return (
     <div className="bg-[#11141D] w-11/12 my-10 px-5 pt-[30px] pb-5 rounded-[20px] flex flex-col items-start justify-start gap-10 sm:w-9/12 md:3/5 lg:w-2/5 z-[9]">
-       <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className=" flex flex-col items-start justify-start gap-[10px] ">
           <h2 className=" text-2xl font-bold text-white ">Setup a node</h2>
           <p className=" text-[#A6A4AF] text-[15px] font-medium ">
@@ -127,5 +125,5 @@ export const SetUpNode = () => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}

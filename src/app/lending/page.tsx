@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MyNodesCard from "@/components/cards/myNodesCard";
-import { MainContainer } from "@/components/container/MainContainer";
-import Image from "next/image";
-import MyRentalNodesTable from "@/components/table/rental-nodes";
+import MyNodesCard from "@/components/cards/myNodesCard"
+import { MainContainer } from "@/components/container/MainContainer"
+import MyRentalNodesTable from "@/components/table/rental-nodes"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
 // import { SetUpNode } from "@/components/models";
+
 const Lending = () => {
   // const [showSetupModal, setShowSetupModal] = useState(false);
 
@@ -65,6 +65,7 @@ const Lending = () => {
               ></div>
             </div>
           )} */}
+          
           <TabsContent value="my-nodes" className=" text-white">
             <MyNodesCard />
           </TabsContent>
@@ -72,12 +73,11 @@ const Lending = () => {
             <div className=" w-full mt-[30px] grid grid-cols-1 items-center justify-center gap-10 md:grid md:grid-cols-7 md:items-start md:justify-between lg:gap-10">
               <MyRentalNodesTable />
             </div>
-            
           </TabsContent>
         </Tabs>
       </div>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default Lending;
+export default Lending

@@ -1,21 +1,24 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import MyNodeTable from "../table/mynode";
-import { fetchMyNodes } from "@/clientApi/node";
+"use client"
+
+import { fetchMyNodes } from "@/clientApi/node"
+import { useEffect, useState } from "react"
+import MyNodeTable from "../table/mynode"
 
 const MyNodesCard = () => {
-  const [myNodes, setMyNodes] = useState<any[]>([]);
+  const [myNodes, setMyNodes] = useState<any[]>([])
 
   useEffect(() => {
-    (async () => {
+    const fetchNodes = async () => {
       try {
-        const resNodes = await fetchMyNodes();
-        setMyNodes(resNodes);
+        const resNodes = await fetchMyNodes()
+        setMyNodes(resNodes)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    })();
-  }, []);
+    }
+
+    fetchNodes()
+  }, [])
 
   return (
     <div className=" w-full mt-[30px] grid grid-cols-1 items-center justify-center gap-10 md:grid md:grid-cols-7 md:items-start md:justify-between lg:gap-10">
@@ -41,31 +44,9 @@ const MyNodesCard = () => {
             0.00 Credits
           </h3>
         </div>
-        {/* <div className=" node-details w-full h-[50px] flex items-center justify-between ">
-          <h3 className=" text-[13px] font-medium text-white ">Past Dispute</h3>
-          <h3 className=" text-[13px] font-medium text-[#7493FF] ">
-            0.000000 ETH
-          </h3>
-        </div>
-        <div className=" node-details w-full h-[50px] flex items-center justify-between ">
-          <h3 className=" text-[13px] font-medium text-white ">
-            Active Estimated Payout
-          </h3>
-          <h3 className=" text-[13px] font-medium text-[#A6A4AF] ">
-            0.000000 ETH
-          </h3>
-        </div>
-        <div className=" w-full h-[50px] flex items-center justify-between ">
-          <h3 className=" text-[13px] font-medium text-white ">
-            Active Estimated Dispute
-          </h3>
-          <h3 className=" text-[13px] font-medium text-[#A6A4AF] ">
-            0.000000 ETH
-          </h3>
-        </div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MyNodesCard;
+export default MyNodesCard

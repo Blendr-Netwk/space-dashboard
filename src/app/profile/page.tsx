@@ -1,20 +1,19 @@
-"use client";
+"use client"
 
-import { MainContainer } from "@/components/container/MainContainer";
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import Balance from "@/components/models/Balance/Balance";
-import { minifyHash } from "@/utils/math";
-import { useUser } from "@/providers/UserProvider";
-import { updateUsername } from "@/clientApi/auth";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { UpdateSSHKeys } from "@/components/sections/profile/ssh-publickey";
+import { updateUsername } from "@/clientApi/auth"
+import { MainContainer } from "@/components/container/MainContainer"
+import Balance from "@/components/models/Balance/Balance"
+import { UpdateSSHKeys } from "@/components/sections/profile/ssh-publickey"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useUser } from "@/providers/UserProvider"
+import { minifyHash } from "@/utils/math"
+import { useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
 
 const Profile = () => {
-  const { user, handleAuthentication } = useUser();
-  const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState("deposit");
+  const { user, handleAuthentication } = useUser()
+  const [showModal, setShowModal] = useState(false)
+  const [status, setStatus] = useState("deposit")
 
   const {
     register,
@@ -22,26 +21,26 @@ const Profile = () => {
     formState: { errors, isSubmitting },
   } = useForm<{ username: string }>({
     defaultValues: { username: user?.username || "" },
-  });
+  })
 
   const handleBalanceModal = (status: "deposit" | "withdraw") => {
-    setShowModal(true);
-    setStatus(status);
-  };
+    setShowModal(true)
+    setStatus(status)
+  }
   const closeBalanceModal = () => {
-    setShowModal(false);
-  };
+    setShowModal(false)
+  }
 
   const onUpdateUsernameSubmit: SubmitHandler<{ username: string }> = async (
     data
   ) => {
     try {
-      await updateUsername(data.username);
-      await handleAuthentication();
+      await updateUsername(data.username)
+      await handleAuthentication()
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
     <>
@@ -67,7 +66,7 @@ const Profile = () => {
               <div className=" mt-8 ">
                 <div className=" border-bot mb-8 pb-10 sm:pb-8 md:pb-10  ">
                   <h1 className=" text-2xl text-white font-semibold mb-6">
-                    Hello {user?.username ? user.username : "Unknwon"}
+                    Hello {user?.username ? user.username : "Blendr User"}
                   </h1>
                   <p className=" text-[#A6A4AF] font-light text-base ">
                     Begin your adventure with Space Dashboard by tackling tasks
@@ -79,37 +78,6 @@ const Profile = () => {
                     your rewards!
                   </p>
                 </div>
-                {/* <div className=" mt-10">
-                  <h2 className=" mt-2 text-[#A8FF77] mb-8 sm:mb-6 ">
-                    Early Space dashboard access at Level 10
-                  </h2>
-                  <div className=" grid grid-cols-1 items-stretch justify-start gap-2 sm:grid sm:grid-cols-2 lg:grid-cols-4 lg:w-3/4 lg:my-8 ">
-                    <div className=" model-toggle-btn px-4 py-2 flex items-center justify-start gap-4 rounded-lg lg:py-[10px] lg:rounded-2xl ">
-                      <Image
-                        src="/assets/img/right.png"
-                        width={500}
-                        height={500}
-                        alt="Picture of the author"
-                        className="w-6 h-6 lg:w-4 lg:h-4"
-                      />
-                      <h3 className=" text-[#A6A4AF] text-sm">
-                        Higher reward rates
-                      </h3>
-                    </div>
-                    <div className=" model-toggle-btn px-4 py-2 flex items-center justify-start gap-4 rounded-lg lg:py-[10px] lg:rounded-2xl ">
-                      <Image
-                        src="/assets/img/right.png"
-                        width={500}
-                        height={500}
-                        alt="Picture of the author"
-                        className="w-6 h-6 lg:w-4 lg:h-4"
-                      />
-                      <h3 className=" text-[#A6A4AF] text-sm">
-                        Community influence
-                      </h3>
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -130,8 +98,8 @@ const Profile = () => {
                 <div className=" mt-8">
                   <h3 className=" text-[#A6A4AF] text-sm ">
                     start your journey with Blendr by choosing a unique
-                    username! This isn&apos;t just a label—it&apos;s your first step
-                    towards crafting a distinct presence within our dynamic
+                    username! This isn&apos;t just a label—it&apos;s your first
+                    step towards crafting a distinct presence within our dynamic
                     community. By setting your username, you not only solidify
                     your identity but also kick off your earning potential. Set
                     your username now to instantly gain an additional 5 points,
@@ -218,7 +186,7 @@ const Profile = () => {
         )}
       </MainContainer>
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

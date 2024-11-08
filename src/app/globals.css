@@ -171,22 +171,9 @@ body {
     ),
     #d9d9d9;
   filter: blur(172.98316955566406px);
-  /* z-index: -99; */
   top: -70rem;
   left: -120rem;
 }
-
-/* .layer-4 {
-  width: 123.5rem;
-  height: 153.2315rem;
-  transform: rotate(-60deg);
-  flex-shrink: 0;
-  opacity: 0.5;
-  background: conic-gradient(from 83deg at 50% 58.24%, #08203D 0deg, #081B30 21.09710142016411deg, #070E16 67.79755890369415deg, #070C13 97.79985308647156deg, #13202E 123.84869456291199deg, #336299 164.39985394477844deg, #57A5FF 218.39985609054565deg, #040B13 313.79985094070435deg), #D9D9D9;
-  filter: blur(172.98316955566406px);
-  top: -10rem;
-  right: -117rem;
-} */
 
 .model-toggle-btn {
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -216,18 +203,6 @@ form input {
     ),
     #11141d;
 }
-
-/* .active {
-  flex-shrink: 0;
-  border-radius: 0px 4px 4px 0px;
-  background: linear-gradient(
-    272deg,
-    #001541 3.88%,
-    rgb(54 117 255 / 11%) 100%
-  );
-  box-shadow: 0.5px 0.5px 0.4px 0px rgb(92 171 222 / 63%) inset,
-    0.5px 0.5px 1.9px 0.3px rgb(34 168 255 / 32%);
-} */
 
 .precentage-line {
   background: linear-gradient(180deg, #ed277a 0%, #e2d45b 52.57%, #55e6d5 100%);
@@ -352,12 +327,6 @@ table::-webkit-scrollbar-thumb {
   border-radius: 16px;
   border: 1px solid #ffffff33;
 }
-
-/* @media only screen and (min-width: 1024px) {
-  table {
-    max-width: 60%;
-  }
-} */
 
 .table-border {
   border-top: 1px solid rgba(255, 255, 255, 0.1);

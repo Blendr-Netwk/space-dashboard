@@ -1,11 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { convertMbToGb } from "@/utils/math";
-import { getUsedHours } from "@/utils/time";
-import { fetchMyKeypair } from "@/clientApi/aws";
-import { downloadFile } from "@/utils/file";
+"use client"
+
+import React from "react"
 
 // createdAt
 // expireAt
@@ -20,8 +15,8 @@ import { downloadFile } from "@/utils/file";
 // userId
 
 type Props = {
-  node: any;
-};
+  node: any
+}
 
 const MyGpuRentedCard: React.FC<Props> = ({ node }) => {
   // const [isDownloading, setIsDownloading] = useState(false);
@@ -46,11 +41,9 @@ const MyGpuRentedCard: React.FC<Props> = ({ node }) => {
         <h3 className=" text-[15px] font-medium text-[#A6A4AF] ">
           {node.cpu.name}
         </h3>
-        <h2 className=" text-2xl font-bold text-white ">
-          {node.gpu.name}
-        </h2>
+        <h2 className=" text-2xl font-bold text-white ">{node.gpu.name}</h2>
       </div>
-{/*       
+      {/*       
       {node.inUse ? (
         <h1 className=" text-[#A6A4AF] text-[14px] ">
           Total Used :
@@ -76,9 +69,7 @@ const MyGpuRentedCard: React.FC<Props> = ({ node }) => {
       </h2>
       <h1 className=" text-[#A6A4AF] text-[14px] ">
         Public IP :
-        <span className=" text-white text-[17px] pl-2">
-          {node.publicIp}
-        </span>
+        <span className=" text-white text-[17px] pl-2">{node.publicIp}</span>
       </h1>
       <h1 className=" text-[#A6A4AF] text-[14px] ">
         Status :
@@ -97,7 +88,7 @@ const MyGpuRentedCard: React.FC<Props> = ({ node }) => {
         </button> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MyGpuRentedCard;
+export default MyGpuRentedCard

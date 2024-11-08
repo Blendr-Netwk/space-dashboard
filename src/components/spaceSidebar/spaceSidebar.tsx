@@ -1,34 +1,31 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import Dropdown from "@/components/dropdown/dropdown";
+import Dropdown from "@/components/dropdown/dropdown"
+import { logoutUser } from "@/controller"
+import Image from "next/image"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useState } from "react"
 import { CiGift } from "react-icons/ci"
-import { IoIosMenu } from "react-icons/io";
-import { MdOutlineClose } from "react-icons/md";
-import { logoutUser } from "@/controller";
+import { IoIosMenu } from "react-icons/io"
+import { MdOutlineClose } from "react-icons/md"
 
 const SpaceSidebar = () => {
-  const pathname = usePathname();
-
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
+  const [isClickMenu, setClickMenu] = useState<boolean>(false)
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const [isExplore, setExplore] = useState<boolean>(false);
-  const [isClickMenu, setClickMenu] = useState<boolean>(false);
+    setIsOpen(!isOpen)
+  }
 
   const handleMenuClick = () => {
-    setClickMenu((pre) => !pre);
-  };
+    setClickMenu((pre) => !pre)
+  }
 
   const handleLogout = () => {
-    logoutUser();
-  };
+    logoutUser()
+  }
 
   return (
     <div className=" w-full fixed top-0 left-0 sm:w-[120px] sm:h-screen sm:flex-shrink-0 z-0 sm:overflow-y-scroll sm:sidebar-scroller">
@@ -204,20 +201,11 @@ const SpaceSidebar = () => {
           <Link href="/rewards">
             <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
               <div className=" icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
-                {/* <Image
-                  src="/assets/img/transaction.png"
-                  width={500}
-                  height={500}
-                  alt="Picture of the author"
-                  className={` w-5 h-5 ${
-                    pathname === "/rewards"
-                      ? " grayscale-0 opacity-100"
-                      : "opacity-25"
-                  }`}
-                /> */}
                 <CiGift
                   className={`w-6 h-6 ${
-                    pathname === "/rewards" ? "text-white" : "text-white opacity-25"
+                    pathname === "/rewards"
+                      ? "text-white"
+                      : "text-white opacity-25"
                   }`}
                 />
               </div>
@@ -283,6 +271,6 @@ const SpaceSidebar = () => {
       </div>
     </div>
   )
-};
+}
 
-export default SpaceSidebar;
+export default SpaceSidebar

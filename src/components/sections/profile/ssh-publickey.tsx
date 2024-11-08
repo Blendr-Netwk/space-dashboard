@@ -1,9 +1,9 @@
-import { updateSSHPublicKey } from "@/clientApi/auth";
-import { useUser } from "@/providers/UserProvider";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { updateSSHPublicKey } from "@/clientApi/auth"
+import { useUser } from "@/providers/UserProvider"
+import { SubmitHandler, useForm } from "react-hook-form"
 
 export const UpdateSSHKeys = () => {
-  const { user } = useUser();
+  const { user } = useUser()
 
   const {
     register,
@@ -11,17 +11,17 @@ export const UpdateSSHKeys = () => {
     formState: { errors, isSubmitting },
   } = useForm<{ publickey: string }>({
     defaultValues: { publickey: user?.sshPublicKey || "" },
-  });
+  })
 
   const onUpdateSshPublicKeySubmit: SubmitHandler<{
-    publickey: string;
+    publickey: string
   }> = async (data) => {
     try {
-      await updateSSHPublicKey(data.publickey);
+      await updateSSHPublicKey(data.publickey)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
     <div className=" mt-8">
@@ -39,7 +39,6 @@ export const UpdateSSHKeys = () => {
               {...register("publickey", { required: true })}
               placeholder="--- Public Key ---"
               rows={5}
-              // cols={33}
               className=" model-toggle-btn w-full rounded-[10px] bg-[#010102] p-4 text-gray-300 sm:w-3/5"
             ></textarea>
           </div>
@@ -54,5 +53,5 @@ export const UpdateSSHKeys = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
