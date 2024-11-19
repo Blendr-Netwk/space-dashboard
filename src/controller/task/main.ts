@@ -1,6 +1,6 @@
 import {
-    generatePredefinedUrl,
-    uploadToAwsUsingPredefinedUrl,
+  generatePredefinedUrl,
+  uploadToAwsUsingPredefinedUrl,
 } from "@/clientApi/aws"
 import { ITaskPayload } from "@/types/node"
 

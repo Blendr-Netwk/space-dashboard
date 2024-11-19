@@ -6,7 +6,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { CiGift } from "react-icons/ci"
 import { IoIosMenu } from "react-icons/io"
 import { MdOutlineClose } from "react-icons/md"
 
@@ -126,6 +125,30 @@ const SpaceSidebar = () => {
               </p>
             </div>
           </Link>
+          <Link href="/rewards">
+            <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
+              <div className="icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
+                <Image
+                  src="/assets/img/sidebar/coins.svg"
+                  width={500}
+                  height={500}
+                  alt="Picture of the author"
+                  className={`w-5 h-5 ${
+                    pathname === "/rewards"
+                      ? "grayscale-0 opacity-100"
+                      : "opacity-25"
+                  }`}
+                />
+              </div>
+              <p
+                className={`text-white text-[11px] font-medium text-center ${
+                  pathname === "/rewards" ? "opacity-100" : "opacity-40"
+                } `}
+              >
+                Claims
+              </p>
+            </div>
+          </Link>
           <Link href="./lending">
             <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
               <div className=" icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
@@ -195,26 +218,6 @@ const SpaceSidebar = () => {
                 } `}
               >
                 Transaction
-              </p>
-            </div>
-          </Link>
-          <Link href="/rewards">
-            <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
-              <div className=" icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
-                <CiGift
-                  className={`w-6 h-6 ${
-                    pathname === "/rewards"
-                      ? "text-white"
-                      : "text-white opacity-25"
-                  }`}
-                />
-              </div>
-              <p
-                className={` text-white text-[11px] font-medium text-center ${
-                  pathname === "/rewards" ? "opacity-100" : "opacity-40"
-                } `}
-              >
-                Rewards
               </p>
             </div>
           </Link>

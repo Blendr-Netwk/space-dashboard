@@ -9,6 +9,15 @@ export const fetchUserRewards = async (): Promise<any[]> => {
   return res.data
 }
 
+export const fetchUserNodeRewards = async (): Promise<any[]> => {
+  const res = await axiosInstance({
+    url: "/api/rewards/user/node-rewards",
+    method: "GET",
+  })
+
+  return res.data
+}
+
 export const fetchTotalRewards = async (): Promise<any[]> => {
   const res = await axiosInstance({
     url: "/api/rewards/user/total",

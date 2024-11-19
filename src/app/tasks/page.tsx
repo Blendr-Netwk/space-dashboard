@@ -1,14 +1,23 @@
 "use client"
-import React, { useEffect, useState } from "react"
-import Image from "next/image"
+
+import { fetchAllAiModels } from "@/clientApi/ai"
+import { getSignedURL, uploadFile } from "@/clientApi/fileUpload"
+import { postNewTask } from "@/clientApi/node"
 import { MainContainer } from "@/components/container/MainContainer"
 import { LogsComponent } from "@/components/sections/taskSection"
-import { useForm, SubmitHandler } from "react-hook-form"
 import { initialTaskData } from "@/mockData"
-import { postNewTask } from "@/clientApi/node"
-import { uploadFileToS3 } from "@/controller"
-import { fetchAllAiModels } from "@/clientApi/ai"
 import { ITaskPayload } from "@/types/node"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@radix-ui/react-select"
+import Image from "next/image"
+import { useEffect, useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { RxTriangleDown } from "react-icons/rx"
 
 const Tasks = () => {
   const {
@@ -25,39 +34,87 @@ const Tasks = () => {
   const watchAllFields = watch()
 
   useEffect(() => {
-    ;(async () => {
+    const getAiModels = async () => {
       try {
         const models = await fetchAllAiModels()
-        setModels(models)
         if (models.length > 0) {
-          setValue("modelDetails.modelId", models[0].id)
-          setValue("modelDetails.modelType", models[0].type)
-          setValue("modelDetails.framework", models[0].framework)
-          setValue("modelDetails.configUrl", models[0].configUrl)
+          const model = models[0]
+          const otherUrl = model.otherUrl
+
           setValue(
-            "modelDetails.pretrainedModelUrl",
-            models[0].pretrainedModelUrl
+            "description",
+            "This model can be fine-tuned using custom datasets to optimize its performance for specific tasks and achieve better accuracy in targeted applications."
           )
-          setValue("modelDetails.other.vocabUrl", models[0].otherUrl.vocab)
+          setValue("modelDetails.modelId", model.id)
+          setValue("modelDetails.modelType", model.type)
+          setValue("modelDetails.modelName", model.modelName)
+          setValue("modelDetails.framework", model.framework)
+          setValue("modelDetails.configUrl", model.configUrl)
+          setValue("modelDetails.pretrainedModelUrl", model.pretrainedModelUrl)
+          setValue("modelDetails.other.vocabUrl", otherUrl.vocab)
           setValue(
             "modelDetails.other.tokenizerConfigUrl",
-            models[0].otherUrl.tokenizerConfig
+            otherUrl.tokenizerConfig
           )
           setValue(
             "modelDetails.other.specialTokensMapUrl",
-            models[0].otherUrl.specialTokensMap
+            otherUrl.specialTokensMap
           )
         }
+
+        setModels(models)
       } catch (err) {
         console.log(err)
       }
-    })()
+    }
+
+    getAiModels()
   }, [])
+
+  const handleFormRequired = () => {
+    const modelDetails = watchAllFields.modelDetails
+    const trainingData = watchAllFields.trainingData
+    const trainingParameters = watchAllFields.trainingParameters
+    const modelType = modelDetails.modelType
+    const trainingDataFile = trainingData.trainingDataFile?.[0]
+    const validationDataFile = trainingData.validationDataFile?.[0]
+    const learningRate = trainingParameters.learningRate
+    const batchSize = trainingParameters.batchSize
+    const numEpochs = trainingParameters.numEpochs
+
+    return (
+      !modelType ||
+      !trainingDataFile ||
+      !validationDataFile ||
+      !learningRate ||
+      !batchSize ||
+      !numEpochs
+    )
+  }
 
   const onSubmit: SubmitHandler<ITaskPayload> = async (data) => {
     try {
       console.log(data)
-      const modelName = data.modelDetails.modelName
+      const trainingData = watchAllFields.trainingData
+      const trainingDataFile = trainingData.trainingDataFile?.[0]
+      const validationDataFile = trainingData.validationDataFile?.[0]
+
+      if (handleFormRequired()) return
+
+      const trainResponse = await uploadFile(trainingDataFile)
+      const validationResponse = await uploadFile(validationDataFile)
+      const trainingDataUrl = await getSignedURL(trainResponse.data.cid)
+      const validationDataUrl = await getSignedURL(validationResponse.data.cid)
+
+      const response = await postNewTask({
+        ...data,
+        trainingData: {
+          trainingDataUrl,
+          validationDataUrl,
+        },
+      })
+      console.log(response)
+      setTaskId(response.data.task.id)
 
       // const pretrainedModelFile = data.modelDetails.pretrainedModelFile[0];
       // const configFile = data.modelDetails.configFile[0];
@@ -66,8 +123,8 @@ const Tasks = () => {
       //   data.modelDetails.other.tokenizerConfigFile[0];
       // const specialTokensMapFile =
       //   data.modelDetails.other.specialTokensMapFile[0];
-      const trainingDataFile = data.trainingData.trainingDataFile[0]
-      const validationDataFile = data.trainingData.validationDataFile[0]
+      // const trainingDataFile = data.trainingData.trainingDataFile[0]
+      // const validationDataFile = data.trainingData.validationDataFile[0]
 
       // const pretrainedModelUrl = await uploadFileToS3(
       //   pretrainedModelFile,
@@ -89,50 +146,50 @@ const Tasks = () => {
       //   specialTokensMapFile,
       //   `aimodels/${modelName}/${specialTokensMapFile.name}`
       // );
-      const trainingDataUrl = await uploadFileToS3(
-        trainingDataFile,
-        `aimodels/${modelName}/training/${trainingDataFile.name}`
-      )
-      const validationDataUrl = await uploadFileToS3(
-        validationDataFile,
-        `aimodels/${modelName}/training/${validationDataFile.name}`
-      )
+      // const trainingDataUrl = await uploadFileToS3(
+      //   trainingDataFile,
+      //   `aimodels/${modelName}/training/${trainingDataFile.name}`
+      // )
+      // const validationDataUrl = await uploadFileToS3(
+      //   validationDataFile,
+      //   `aimodels/${modelName}/training/${validationDataFile.name}`
+      // )
 
-      // console.log(pretrainedModelUrl);
-      // console.log(configUrl);
-      // console.log(vocabUrl);
-      // console.log(tokenizerConfigUrl);
-      // console.log(specialTokensMapUrl);
-      console.log(trainingDataUrl)
-      console.log(validationDataUrl)
+      // // console.log(pretrainedModelUrl);
+      // // console.log(configUrl);
+      // // console.log(vocabUrl);
+      // // console.log(tokenizerConfigUrl);
+      // // console.log(specialTokensMapUrl);
+      // console.log(trainingDataUrl)
+      // console.log(validationDataUrl)
 
-      // setValue("modelDetails.pretrainedModelUrl", pretrainedModelUrl);
-      // setValue("modelDetails.configUrl", configUrl);
-      // setValue("modelDetails.other.vocabUrl", vocabUrl);
-      // setValue("modelDetails.other.tokenizerConfigUrl", tokenizerConfigUrl);
-      // setValue("modelDetails.other.specialTokensMapUrl", specialTokensMapUrl);
-      setValue("trainingData.trainingDataUrl", trainingDataUrl)
-      setValue("trainingData.validationDataUrl", validationDataUrl)
+      // // setValue("modelDetails.pretrainedModelUrl", pretrainedModelUrl);
+      // // setValue("modelDetails.configUrl", configUrl);
+      // // setValue("modelDetails.other.vocabUrl", vocabUrl);
+      // // setValue("modelDetails.other.tokenizerConfigUrl", tokenizerConfigUrl);
+      // // setValue("modelDetails.other.specialTokensMapUrl", specialTokensMapUrl);
+      // setValue("trainingData.trainingDataUrl", trainingDataUrl)
+      // setValue("trainingData.validationDataUrl", validationDataUrl)
 
-      // data.modelDetails.pretrainedModelUrl = pretrainedModelUrl;
-      // data.modelDetails.configUrl = configUrl;
-      // data.modelDetails.other.vocabUrl = vocabUrl;
-      // data.modelDetails.other.tokenizerConfigUrl = tokenizerConfigUrl;
-      // data.modelDetails.other.specialTokensMapUrl = specialTokensMapUrl;
-      data.trainingData.trainingDataUrl = trainingDataUrl
-      data.trainingData.validationDataUrl = validationDataUrl
+      // // data.modelDetails.pretrainedModelUrl = pretrainedModelUrl;
+      // // data.modelDetails.configUrl = configUrl;
+      // // data.modelDetails.other.vocabUrl = vocabUrl;
+      // // data.modelDetails.other.tokenizerConfigUrl = tokenizerConfigUrl;
+      // // data.modelDetails.other.specialTokensMapUrl = specialTokensMapUrl;
+      // data.trainingData.trainingDataUrl = trainingDataUrl
+      // data.trainingData.validationDataUrl = validationDataUrl
 
-      // console.log("fileType", `${pretrainedModelFile.type}`);
-      // const predefinedUrl = await generatePredefinedUrl({
-      //   fileName: `aimodels/${modelName}/${pretrainedModelFile.name}`,
-      //   fileType: pretrainedModelFile.type,
-      // });
-      // console.log(predefinedUrl);
-      // const reponse = await uploadToAws(predefinedUrl, pretrainedModelFile);
-      console.log(data)
-      const response = await postNewTask(data)
-      console.log(response)
-      setTaskId(response.data.task.id)
+      // // console.log("fileType", `${pretrainedModelFile.type}`);
+      // // const predefinedUrl = await generatePredefinedUrl({
+      // //   fileName: `aimodels/${modelName}/${pretrainedModelFile.name}`,
+      // //   fileType: pretrainedModelFile.type,
+      // // });
+      // // console.log(predefinedUrl);
+      // // const reponse = await uploadToAws(predefinedUrl, pretrainedModelFile);
+      // console.log(data)
+      // const response = await postNewTask(data)
+      // console.log(response)
+      // setTaskId(response.data.task.id)
     } catch (err) {
       console.log(err)
     }
@@ -150,6 +207,17 @@ const Tasks = () => {
   //   console.log(e.target.files);
   // };
 
+  const handleModelTypeChange = (value: string) => {
+    if (!value) return
+
+    const model = models.find((i) => i.type === value)
+
+    setValue("modelDetails.modelType", value)
+    setValue("modelDetails.modelName", model.modelName)
+    // setValue("description", model.description)
+    setValue("modelDetails.framework", model.framework)
+  }
+
   return (
     <MainContainer>
       <div className="w-full grid grid-cols-9 lg:items-start lg:justify-between gap-8 sm:pl-[150px] sm:pr-5">
@@ -166,37 +234,37 @@ const Tasks = () => {
                 Model Details
               </h4>
 
-              <div className="mt-8  w-full flex flex-col items-start justify-start gap-[10px] ">
+              <div className="mt-8 w-full flex flex-col items-start justify-start gap-[10px] ">
                 <h4 className=" text-base font-semibold text-white">
-                  Model Type
+                  Model Type <span className="text-red-600">*</span>
                 </h4>
-                <div className=" w-full">
-                  {/* <Select {...register("modelDetails.modelType")}>
-                    <SelectTrigger className=" h-[50px] rounded-[10px] model-toggle-btn p-4 text-white hover:text-gray-100">
+                <div className="w-full">
+                  <Select onValueChange={handleModelTypeChange}>
+                    <SelectTrigger className="model-toggle-btn flex items-center justify-between w-full h-[50px] rounded-[10px] p-4 text-gray-400 hover:text-gray-100">
                       <SelectValue
-                        placeholder="Model Name (distilbert-base-uncased)"
-                        className=" text-gray-400"
-                        // defaultValue={watch("modelDetails.modelType")</Select>}
+                        placeholder={
+                          watchAllFields.modelDetails.modelType
+                            ? watchAllFields.modelDetails.modelType
+                            : "Model Type"
+                        }
                       />
+                      <RxTriangleDown />
                     </SelectTrigger>
-                    <SelectContent className=" model-toggle-btn bg-[#11141da5] backdrop-blur-sm text-white hover:text-gray-100/50">
+                    <SelectContent className="model-toggle-btn bg-[#11141da5] backdrop-blur-sm text-white cursor-pointer">
                       {models &&
-                        models.map((model) => {
+                        models.map((model, i) => {
                           return (
-                            <SelectItem key={model.modelType} value={model.modelType}>
-                             {model.modelType}
+                            <SelectItem
+                              key={model.type + i}
+                              value={model.type}
+                              className="p-2 hover:text-gray-100/50"
+                            >
+                              {model.type}
                             </SelectItem>
-                          );
+                          )
                         })}
                     </SelectContent>
-                  </Select> */}
-                  <input
-                    type="text"
-                    placeholder="Model Type"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
-                    {...register("modelDetails.modelType")}
-                    readOnly
-                  />
+                  </Select>
                 </div>
               </div>
 
@@ -208,8 +276,9 @@ const Tasks = () => {
                   <input
                     type="text"
                     placeholder="Model Name"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     {...register("modelDetails.modelName")}
+                    readOnly
                   />
                 </div>
 
@@ -220,7 +289,7 @@ const Tasks = () => {
                   <input
                     type="text"
                     placeholder="Task Type"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     {...register("taskType")}
                     readOnly
                   />
@@ -230,11 +299,12 @@ const Tasks = () => {
                   <h4 className=" text-base font-semibold text-white">
                     Description
                   </h4>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={4}
                     placeholder="Description"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     {...register("description")}
+                    readOnly
                   />
                 </div>
 
@@ -245,7 +315,7 @@ const Tasks = () => {
                   <input
                     type="text"
                     placeholder="Framework"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     {...register("modelDetails.framework")}
                     readOnly
                   />
@@ -442,7 +512,7 @@ const Tasks = () => {
               <div className=" mt-8 grid grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2">
                 <div className=" w-full flex flex-col items-start justify-start gap-[10px] ">
                   <h3 className=" text-base font-semibold text-white">
-                    Training Data File
+                    Training Data File <span className="text-red-600">*</span>
                   </h3>
                   <div className="text-sm flex flex-col model-toggle-btn w-full h-[60px] rounded-[10px] bg-[#010102] p-4 relative cursor-pointer">
                     <label
@@ -476,7 +546,7 @@ const Tasks = () => {
                 </div>
                 <div className=" w-full flex flex-col items-start justify-start gap-[10px]  ">
                   <h3 className=" text-base font-semibold text-white">
-                    Validation Data File
+                    Validation Data File <span className="text-red-600">*</span>
                   </h3>
                   <div className="text-sm flex flex-col model-toggle-btn w-full h-[60px] rounded-[10px] bg-[#010102] p-4 relative cursor-pointer">
                     <label
@@ -520,10 +590,11 @@ const Tasks = () => {
               <div className=" mt-8 grid grid-cols-1 items-center justify-center gap-4 sm:grid-cols-2">
                 <div className=" w-full flex flex-col items-start justify-start gap-[10px]">
                   <h4 className=" text-base font-semibold text-white">
-                    Learning Rate
+                    Learning Rate <span className="text-red-600">*</span>
                   </h4>
                   <input
-                    type="text"
+                    type="number"
+                    step=".0001"
                     {...register("trainingParameters.learningRate")}
                     placeholder="Learning Rate"
                     className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
@@ -531,10 +602,10 @@ const Tasks = () => {
                 </div>
                 <div className=" w-full flex flex-col items-start justify-start gap-[10px]">
                   <h4 className=" text-base font-semibold text-white">
-                    Batch Size
+                    Batch Size <span className="text-red-600">*</span>
                   </h4>
                   <input
-                    type="text"
+                    type="number"
                     {...register("trainingParameters.batchSize")}
                     placeholder="Batch Size"
                     className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
@@ -542,10 +613,10 @@ const Tasks = () => {
                 </div>
                 <div className=" w-full flex flex-col items-start justify-start gap-[10px]">
                   <h4 className=" text-base font-semibold text-white">
-                    Number of Epochs
+                    Number of Epochs <span className="text-red-600">*</span>
                   </h4>
                   <input
-                    type="text"
+                    type="number"
                     {...register("trainingParameters.numEpochs")}
                     placeholder="Number of Epochs"
                     className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
@@ -559,7 +630,7 @@ const Tasks = () => {
                     type="text"
                     {...register("trainingParameters.optimizer")}
                     placeholder="Optimizer"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     readOnly
                   />
                 </div>
@@ -571,15 +642,15 @@ const Tasks = () => {
                     type="text"
                     {...register("trainingParameters.lossFunction")}
                     placeholder="Loss Function"
-                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300"
+                    className=" model-toggle-btn w-full h-[50px] rounded-[10px] bg-[#010102] p-4 text-gray-300 cursor-not-allowed"
                     readOnly
                   />
                 </div>
               </div>
             </div>
             <button
-              disabled={isSubmitting}
-              className="flex items-center justify-center px-5 py-3 rounded-full bg-[#6c95c0] text-white font-medium max-w-[20rem] text-lg uppercase mx-auto w-full mt-5"
+              disabled={isSubmitting || handleFormRequired()}
+              className="flex items-center justify-center px-5 py-3 rounded-full bg-[#6c95c0] text-white font-medium max-w-[20rem] text-lg uppercase mx-auto w-full mt-5 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Processing.." : "Start"}
             </button>
