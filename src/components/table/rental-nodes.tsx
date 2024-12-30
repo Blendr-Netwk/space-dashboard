@@ -14,18 +14,37 @@ import { useEffect, useState } from "react"
 const MyRentalNodesTable = () => {
   const [myNodes, setMyNodes] = useState<any[]>([])
 
-  useEffect(() => {
-    const getRentalNodes = async () => {
-      try {
-        const resNodes = await fetchRentalNodes()
-        setMyNodes(resNodes)
-      } catch (err) {
-        console.log(err)
-      }
+  const getRentalNodes = async () => {
+    try {
+      const resNodes = await fetchRentalNodes()
+      setMyNodes(resNodes)
+    } catch (err) {
+      console.log(err)
     }
+  }
 
+  useEffect(() => {
     getRentalNodes()
   }, [])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const currentTime = new Date()
+      const shouldFetchGpus = myNodes.some((gpu: any) => {
+        return (
+          gpu.rents &&
+          gpu.rents.length > 0 &&
+          new Date(gpu.rents[0].endDate) < currentTime
+        )
+      })
+
+      if (shouldFetchGpus) {
+        getRentalNodes()
+      }
+    }, 10000)
+
+    return () => clearInterval(intervalId)
+  }, [myNodes])
 
   return (
     <div className=" md:col-span-12 lg:col-span-12 ">
@@ -64,8 +83,12 @@ const MyRentalNodesTable = () => {
               <TableCell className="font-medium">{node.name}</TableCell>
               <TableCell className="font-medium">{node.gpu.name}</TableCell>
               <TableCell>{node.price}</TableCell>
-              <TableCell>{new Date(node.startedAt).toLocaleString()}</TableCell>
-              <TableCell>{new Date(node.expireAt).toLocaleString()}</TableCell>
+              <TableCell>
+                {new Date(node.rents[0].startDate).toLocaleString()}
+              </TableCell>
+              <TableCell>
+                {new Date(node.rents[0].endDate).toLocaleString()}
+              </TableCell>
               <TableCell className="text-right">{node.publicIp}</TableCell>
               <TableCell className="text-right">{node.port}</TableCell>
             </TableRow>

@@ -57,6 +57,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     return user
   }
 
+  const updateBalance = (balance: number) => {
+    setUser((prevUser: any) => ({
+      ...prevUser,
+      balance,
+    }))
+  }
+
   useEffect(() => {
     if (hasRun.current) return
     hasRun.current = true
@@ -65,15 +72,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         if (pathname === "/login") {
           const res = await loginUser(CONNECT_WALLET_TYPES.METAMASK)
-          if (res) {
-            localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res)
+          if (res.token) {
+            localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res.token)
             await handleAuthentication()
+            updateBalance(res.balance)
             if (sessionId) router.push(`/verify?sessionId=${sessionId}`)
             else router.push("/")
           }
         } else {
-          await connectWallet("metamask")
+          const res = await connectWallet("metamask")
           await handleAuthentication()
+          updateBalance(res.balance)
         }
       } catch (err) {
         handleAuthenticationError(err)

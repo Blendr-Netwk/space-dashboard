@@ -46,7 +46,7 @@ const RentedGpus = () => {
             <Link
               href="/lending"
               className=" h-10 rounded-[88.21px] px-5 py-[15px] bg-[#6C95C0] flex flex-row items-center justify-center gap-[10px] "
-              target="_blank"
+              target="_self"
             >
               <Image
                 src="/assets/img/sidebar/microchip.png"
@@ -64,7 +64,12 @@ const RentedGpus = () => {
             <div className=" mt-10 flex flex-col items-center justify-center gap-[10px] md:grid md:grid-cols-2 md:items-stretch md:justify-center md:gap-[10px] 2xl:grid-cols-3  xl:items-stretch xl:justify-start xl:gap-[10px]">
               {gpus.length > 0 &&
                 gpus.map((data) => (
-                  <RentedGpuCard key={`available-${data.id}`} node={data} />
+                  <RentedGpuCard
+                    key={`available-${data.id}`}
+                    node={data}
+                    handleRefresh={() => {}}
+                    showCancel={false}
+                  />
                 ))}
             </div>
           </TabsContent>
@@ -72,7 +77,12 @@ const RentedGpus = () => {
             <div className=" mt-10 flex flex-col items-center justify-center gap-[10px] md:grid md:grid-cols-2 md:items-stretch md:justify-center md:gap-[10px] xl:grid-cols-3 xl:items-stretch xl:justify-start xl:gap-[10px]">
               {activeGpus.length > 0 &&
                 activeGpus.map((data) => (
-                  <RentedGpuCard key={`active-${data.id}`} node={data} />
+                  <RentedGpuCard
+                    key={`active-${data.id}`}
+                    node={data}
+                    handleRefresh={() => {}}
+                    showCancel={false}
+                  />
                 ))}
             </div>
           </TabsContent>

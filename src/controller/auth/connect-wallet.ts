@@ -3,7 +3,15 @@ import { APP_NAME, LOCAL_STORAGE_AUTH_KEY } from "@/constants/app"
 import { connectWallet, getProvider } from "@/service/ether"
 import { IConnectWallet } from "@/types"
 
-export const loginUser = (walletType: IConnectWallet): Promise<string> => {
+interface ConnectWalletResponse {
+  token: string
+  account: string
+  balance: number
+}
+
+export const loginUser = (
+  walletType: IConnectWallet
+): Promise<ConnectWalletResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await connectWallet(walletType)
@@ -13,7 +21,7 @@ export const loginUser = (walletType: IConnectWallet): Promise<string> => {
         signedMsg.signature,
         signedMsg.publicAddress
       )
-      resolve(token)
+      resolve({ token, account: response.account, balance: response.balance })
     } catch (err) {
       reject(err)
     }

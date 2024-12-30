@@ -1,6 +1,14 @@
 import { axiosInstance } from "@/service/axios"
 import { AxiosError } from "axios"
 
+export const getAddressByUserId = async (userId: string): Promise<any> => {
+  const res = await axiosInstance({
+    url: `/api/address/${userId}`,
+    method: "GET",
+  })
+  return res.data
+}
+
 export const authenticateUser = (
   signature: string,
   publicAddress: string

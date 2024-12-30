@@ -88,7 +88,7 @@ const GpuRentCard: React.FC<Props> = ({ node, handleSubmit }) => {
             Price per hour
           </h3>
           <h3 className=" text-[15px] font-medium text-white">
-            {node.price} Credits
+            {node.price} BLENDR
           </h3>
         </div>
         <button

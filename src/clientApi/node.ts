@@ -40,6 +40,14 @@ export const fetchRentalNodes = async (): Promise<any[]> => {
   }
 }
 
+export const fetchTasks = async (): Promise<any> => {
+  const res = await axiosInstance({
+    url: "/api/tasks",
+    method: "GET",
+  })
+  return res.data
+}
+
 export const postNewTask = async (data: any): Promise<any> => {
   const res = await axiosInstance({
     url: "/api/add/new-task",
@@ -60,6 +68,32 @@ export const fetchLogs = async (taskId: string): Promise<any> => {
 export const lendGpuApi = async (data: any): Promise<any> => {
   const res = await axiosInstance({
     url: `/api/lend/gpu`,
+    method: "POST",
+    data,
+  })
+  return res.data
+}
+
+export const rentGpu = async (data: any): Promise<any> => {
+  const res = await axiosInstance({
+    url: `/api/rent/gpu`,
+    method: "POST",
+    data,
+  })
+  return res.data
+}
+
+export const rentClaim = async (): Promise<any> => {
+  const res = await axiosInstance({
+    url: `/api/rent/claim`,
+    method: "POST",
+  })
+  return res.data
+}
+
+export const rentRefund = async (data: any): Promise<any> => {
+  const res = await axiosInstance({
+    url: `/api/rent/refund`,
     method: "POST",
     data,
   })

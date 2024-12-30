@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { IoIosMenu } from "react-icons/io"
 import { MdOutlineClose } from "react-icons/md"
+import { HiOutlineCommandLine } from "react-icons/hi2"
 
 const SpaceSidebar = () => {
   const pathname = usePathname()
@@ -125,6 +126,26 @@ const SpaceSidebar = () => {
               </p>
             </div>
           </Link>
+          <Link href="/logs">
+            <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
+              <div className="icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
+                <HiOutlineCommandLine
+                  className={`w-5 h-5 ${
+                    pathname === "/logs"
+                      ? "grayscale-0 opacity-100 text-white"
+                      : "opacity-25 text-white"
+                  }`}
+                />
+              </div>
+              <p
+                className={`text-white text-[11px] font-medium text-center ${
+                  pathname === "/logs" ? "opacity-100" : "opacity-40"
+                } `}
+              >
+                Logs
+              </p>
+            </div>
+          </Link>
           <Link href="/rewards">
             <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
               <div className="icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
@@ -197,7 +218,7 @@ const SpaceSidebar = () => {
               </p>
             </div>
           </Link>
-          <Link href="/transaction">
+          {/* <Link href="/transaction">
             <div className=" w-full flex flex-row items-center justify-between gap-4 sm:flex sm:flex-col sm:items-center sm:justify-center sm:gap-1">
               <div className=" icon-bg w-10 h-10 rounded-[88.21px] flex items-center justify-center">
                 <Image
@@ -220,7 +241,7 @@ const SpaceSidebar = () => {
                 Transaction
               </p>
             </div>
-          </Link>
+          </Link> */}
         </div>
         <div className=" ml-8 w-full mt-4 flex flex-col items-start justify-center gap-2 sm:ml-0 sm:items-center">
           <div className="w-9 flex items-center justify-center">

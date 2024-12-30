@@ -4,7 +4,7 @@ import { fetchMyNodes } from "@/clientApi/node"
 import { useEffect, useState } from "react"
 import MyNodeTable from "../table/mynode"
 
-const MyNodesCard = () => {
+const MyNodesCard = ({ amount }: any) => {
   const [myNodes, setMyNodes] = useState<any[]>([])
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const MyNodesCard = () => {
         <div className=" node-details w-full h-[50px] flex items-center justify-between ">
           <h3 className=" text-[13px] font-medium text-white ">Total earn</h3>
           <h3 className=" text-[13px] font-medium text-[#7493FF] ">
-            0.00 Credits
+            {amount.toFixed(4)} BLENDR
           </h3>
         </div>
       </div>

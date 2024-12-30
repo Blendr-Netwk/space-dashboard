@@ -3,7 +3,7 @@
 import GpuRentCard from "@/components/cards/gpuRentCard"
 import { MainContainer } from "@/components/container/MainContainer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getAllNodes } from "@/clientApi/node"
 import MyGpuRentedCard from "@/components/cards/myGpuRentedCard"
 import RentedGpuCard from "@/components/cards/rentedGpuCard"
@@ -15,30 +15,33 @@ const RentGpus = () => {
   const [myTerminatedGpus, setMyTerminatedGpus] = useState<any[]>([])
   const [showConfirmModel, setShowConfirmModel] = useState(false)
   const [selectedNode, setSelectedNode] = useState<string>("")
+  const [activeTab, setActiveTab] = useState<string>("available")
 
-  useEffect(() => {
-    const fetchGpus = async () => {
-      try {
-        const resGpus = await getAllNodes()
+  const fetchGpus = async () => {
+    try {
+      const resGpus = await getAllNodes()
 
-        const availableGpus = resGpus.filter(
-          (node: { isConnected: any; status: string }) => {
-            return node.isConnected && node.status === "idle"
-          }
-        )
-        const activeGpus = resGpus.filter((node: { status: string }) => {
-          return node.status === "lended"
-        })
+      const availableGpus = resGpus.filter(
+        (node: { isConnected: any; status: string }) => {
+          return node.isConnected && node.status === "idle"
+        }
+      )
+      const activeGpus = resGpus.filter((node: { status: string }) => {
+        return node.status === "lended"
+      })
 
-        setGpus(availableGpus)
-        setMyActiveGpus(activeGpus)
-      } catch (err) {
-        console.log(err)
-      }
+      setGpus(availableGpus)
+      setMyActiveGpus(activeGpus)
+    } catch (err) {
+      console.log(err)
     }
+  }
 
+  const handleRentGPU = async () => {
     fetchGpus()
-  }, [])
+    setShowConfirmModel(false)
+    setActiveTab("active")
+  }
 
   const handleRentSubmit = async (node: any) => {
     try {
@@ -49,10 +52,40 @@ const RentGpus = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchAndSetGpus = async () => {
+      await fetchGpus()
+    }
+    fetchAndSetGpus()
+  }, [])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const currentTime = new Date()
+      const shouldFetchGpus = myActiveGpus.some((gpu: any) => {
+        return (
+          gpu.rents &&
+          gpu.rents.length > 0 &&
+          new Date(gpu.rents[0].endDate) < currentTime
+        )
+      })
+
+      if (shouldFetchGpus) {
+        fetchGpus()
+      }
+    }, 10000)
+
+    return () => clearInterval(intervalId)
+  }, [myActiveGpus])
+
   return (
     <MainContainer>
       <div className=" w-full mt-20 pt-8 px-5 sm:p-0 sm:w-full sm:mt-8 sm:mx-4 sm:pl-[150px]">
-        <Tabs defaultValue="available" className=" ">
+        <Tabs
+          defaultValue={activeTab}
+          value={activeTab}
+          onValueChange={setActiveTab}
+        >
           <div className=" w-full flex flex-row items-start justify-between sm:items-center">
             <div className=" flex flex-col items-start justify-start gap-5 sm:flex sm:flex-row sm:items-center sm:justify-between sm:gap-5">
               <h2 className=" text-xl font-bold text-white md:text-2xl ">
@@ -94,7 +127,12 @@ const RentGpus = () => {
             <div className=" mt-10 flex flex-col items-center justify-center gap-[10px] md:grid md:grid-cols-2 md:items-stretch md:justify-center md:gap-[10px] 2xl:grid-cols-3  xl:items-stretch xl:justify-start xl:gap-[10px]">
               {myActiveGpus.map((data, i) => {
                 return (
-                  <RentedGpuCard key={`available-${data.id}`} node={data} />
+                  <RentedGpuCard
+                    key={`available-${data.id}`}
+                    node={data}
+                    handleRefresh={fetchGpus}
+                    showCancel={false}
+                  />
                 )
               })}
             </div>
@@ -120,7 +158,10 @@ const RentGpus = () => {
 
         {showConfirmModel && (
           <div className="flex items-center justify-center inset-0 fixed">
-            <RentGpuConfirmModal node={selectedNode} />
+            <RentGpuConfirmModal
+              node={selectedNode}
+              handleRentGPU={handleRentGPU}
+            />
 
             <div
               className="z-[2] fixed inset-0 bg-black/40 backdrop-blur-sm"

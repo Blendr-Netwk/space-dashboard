@@ -106,7 +106,7 @@ const Rewards = () => {
               <span className="text-3xl text-white">
                 {totalReward.claimedAmount}
               </span>
-              <span className="text-xl text-white">$BLENDR</span>
+              <span className="text-xl text-white">BLENDR</span>
             </div>
           </div>
           <div className="flex flex-col gap-4">
@@ -115,7 +115,7 @@ const Rewards = () => {
               <span className="text-3xl text-gray-600">
                 {totalReward.estimateToClaim}
               </span>
-              <span className="text-xl text-gray-600">$BLENDR</span>
+              <span className="text-xl text-gray-600">BLENDR</span>
             </div>
           </div>
           <div className="flex flex-col gap-4">
@@ -124,7 +124,7 @@ const Rewards = () => {
               <span className="text-3xl text-white">
                 {totalReward.amountToClaim}
               </span>
-              <span className="text-xl text-white">$BLENDR</span>
+              <span className="text-xl text-white">BLENDR</span>
             </div>
           </div>
           <button

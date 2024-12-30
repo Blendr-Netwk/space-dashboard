@@ -20,8 +20,8 @@ const Login = () => {
   const handleLoginWithMetamask = async () => {
     try {
       const res = await loginUser(CONNECT_WALLET_TYPES.METAMASK)
-      if (res) {
-        localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res)
+      if (res.token) {
+        localStorage.setItem(LOCAL_STORAGE_AUTH_KEY, res.token)
         await handleAuthentication()
         if (sessionId) router.push(`/verify?sessionId=${sessionId}`)
         else router.push("/")

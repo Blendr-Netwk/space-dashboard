@@ -3,7 +3,7 @@
 import { updateUsername } from "@/clientApi/auth"
 import { MainContainer } from "@/components/container/MainContainer"
 import Balance from "@/components/models/Balance/Balance"
-import { UpdateSSHKeys } from "@/components/sections/profile/ssh-publickey"
+// import { UpdateSSHKeys } from "@/components/sections/profile/ssh-publickey"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useUser } from "@/providers/UserProvider"
 import { minifyHash } from "@/utils/math"
@@ -54,7 +54,7 @@ const Profile = () => {
               <div className=" flex flex-col-reverse items-end justify-start gap-3 mb-16 w-full sm:flex-row sm:items-center sm:justify-end lg:flex lg:items-center lg:justify-end lg:gap-4">
                 <div className=" model-toggle-btn px-6 py-2 rounded-2xl ">
                   <h3 className=" text-slate-100 ">
-                    {user?.balance.toFixed(2)} credits
+                    {user?.balance.toFixed(4)} BLENDR
                   </h3>
                 </div>
                 <div className=" profile-border px-6 py-2 rounded-lg ">
@@ -83,16 +83,19 @@ const Profile = () => {
           </div>
           <div className=" w-11/12 border-alpha rounded-2xl py-12 px-10 sm:w-11/12 ">
             <Tabs defaultValue="account" className="w-11/12">
-              <TabsList className=" model-toggle-btn w-[200px] h-[44px] rounded-[15px] p-[5px] sm:w-[250px]">
-                <TabsTrigger value="account" className=" text-white ">
+              <TabsList className=" model-toggle-btn w-[100px] h-[44px] rounded-[15px] p-[5px] sm:w-[100px]">
+                <TabsTrigger
+                  value="account"
+                  className=" text-white cursor-default"
+                >
                   Account
                 </TabsTrigger>
-                <TabsTrigger value="balance" className=" text-white">
+                {/* <TabsTrigger value="balance" className=" text-white">
                   Balance
                 </TabsTrigger>
                 <TabsTrigger value="public_key" className=" text-white">
                   Public Key
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
               <TabsContent value="account">
                 <div className=" mt-8">
@@ -102,7 +105,7 @@ const Profile = () => {
                     step towards crafting a distinct presence within our dynamic
                     community. By setting your username, you not only solidify
                     your identity but also kick off your earning potential. Set
-                    your username now to instantly gain an additional 5 points,
+                    your username now,
                     propelling your progress forward. Your username opens the
                     door to exclusive rewards and opportunities. Don&apos;t miss
                     out—claim your points and leave your mark with Blendr!
@@ -131,7 +134,7 @@ const Profile = () => {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="balance">
+              {/* <TabsContent value="balance">
                 <div className=" mt-8">
                   <h3 className=" text-[#A6A4AF] text-sm ">
                     Welcome to your Balance Overview — the central hub for
@@ -177,7 +180,7 @@ const Profile = () => {
               </TabsContent>
               <TabsContent value="public_key">
                 <UpdateSSHKeys />
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </div>
         </div>

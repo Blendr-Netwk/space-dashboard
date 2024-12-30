@@ -1,12 +1,50 @@
+"use client"
+
+import { rentClaim } from "@/clientApi/node"
 import MyNodesCard from "@/components/cards/myNodesCard"
 import { MainContainer } from "@/components/container/MainContainer"
 import MyRentalNodesTable from "@/components/table/rental-nodes"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getRentContract } from "@/service/ether/contract"
+import { ethers } from "ethers"
 import Image from "next/image"
-// import { SetUpNode } from "@/components/models";
+import { useEffect, useState } from "react"
 
 const Lending = () => {
-  // const [showSetupModal, setShowSetupModal] = useState(false);
+  const [amount, setAmount] = useState(0)
+
+  const fetchRentClaim = async () => {
+    const res: any = await rentClaim()
+    setAmount(res.data !== 0 ? res.data.amount : 0)
+  }
+
+  const handleClaim = async () => {
+    if (!amount) return
+
+    try {
+      const res: any = await rentClaim()
+      const { amount, nonce, timestamp, signature } = res.data
+      const amountInWei = ethers.parseUnits(amount.toString(), 18)
+      const contract = await getRentContract()
+      const tx = await contract.claim(
+        amountInWei,
+        nonce,
+        timestamp,
+        signature,
+        {
+          gasLimit: 300000,
+        }
+      )
+      await tx.wait()
+      fetchRentClaim()
+    } catch {
+      console.error("Error claiming")
+    }
+  }
+
+  useEffect(() => {
+    fetchRentClaim()
+  }, [])
 
   return (
     <MainContainer>
@@ -32,11 +70,21 @@ const Lending = () => {
                 </TabsTrigger>
               </TabsList>
             </div>
-            <div className=" w-full flex items-center justify-start sm:justify-end ">
+            <div className=" w-full flex items-center justify-start sm:justify-end  gap-4">
+              <button
+                onClick={() => handleClaim()}
+                disabled={amount === 0}
+                className={`flex justify-center items-center h-10 px-5 py-3 rounded-full text-white text-base w-40 ${
+                  amount === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-[#6C95C0] hover:bg-[#4f7aa8]"
+                }`}
+              >
+                Claim
+              </button>
               <a
                 className=" h-10 rounded-[88.21px] px-5 py-[15px] bg-[#6C95C0] flex flex-row items-center justify-center gap-[10px] "
-                // onClick={() => setShowSetupModal(true)}
-                href="https://github.com/blendr-network/blendr-cli"
+                href="https://github.com/Blendr-Netwk/blendr-cli"
                 target="_blank"
               >
                 <Image
@@ -53,21 +101,8 @@ const Lending = () => {
             </div>
           </div>
 
-          {/* {showSetupModal && (
-            <div className="flex items-center justify-center inset-0 fixed">
-              <SetUpNode />
-
-              <div
-                className="z-[2] fixed inset-0 bg-black/40 backdrop-blur-sm"
-                onClick={() => {
-                  setShowSetupModal(false);
-                }}
-              ></div>
-            </div>
-          )} */}
-          
           <TabsContent value="my-nodes" className=" text-white">
-            <MyNodesCard />
+            <MyNodesCard amount={amount} />
           </TabsContent>
           <TabsContent value="rentals" className=" text-white">
             <div className=" w-full mt-[30px] grid grid-cols-1 items-center justify-center gap-10 md:grid md:grid-cols-7 md:items-start md:justify-between lg:gap-10">

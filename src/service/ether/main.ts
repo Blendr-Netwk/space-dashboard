@@ -8,6 +8,7 @@ interface ConnectWalletResponse {
   message: string
   status: number
   account: string
+  balance: number
 }
 
 let provider: BrowserProvider
@@ -57,6 +58,14 @@ const listenToEvents = (ethereumProvider: any): void => {
   })
 }
 
+export const getAccountBalance = async (): Promise<number> => {
+  if (!current_account) {
+    throw new Error("No account connected.")
+  }
+  const balanceBigNumber = await provider.getBalance(current_account)
+  return parseFloat(ethers.formatEther(balanceBigNumber)) // Convert balance from Wei to Ether
+}
+
 export const connectWallet = async (
   walletType: IConnectWallet
 ): Promise<ConnectWalletResponse> => {
@@ -64,12 +73,14 @@ export const connectWallet = async (
   if (ethereumProvider && walletType === "metamask") {
     listenToEvents(ethereumProvider)
     await requestAccount(ethereumProvider)
+    const balance = await getAccountBalance()
+
     const network = await provider.getNetwork()
     if (Number(network.chainId) !== 1) {
       await switchNetwork()
     }
 
-    return { message: "success", status: 200, account: current_account! }
+    return { message: "success", status: 200, account: current_account!, balance }
   } else {
     throw new Error("Ethereum provider not found or wallet type not supported.")
   }
